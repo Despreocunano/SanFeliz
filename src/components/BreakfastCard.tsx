@@ -45,7 +45,7 @@ export default function BreakfastCard({ id, name, description, price, image, top
 🔸 Toppings: ${selectedToppingsText || 'Sin toppings adicionales'}\n
 💰 Total: $${getTotalPrice()}`;
 
-    const whatsappUrl = `https://wa.me/+123456789?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/+56974977204?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 
