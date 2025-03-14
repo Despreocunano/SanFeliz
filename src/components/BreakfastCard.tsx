@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import PaymentSidebar from './PaymentSidebar';
+import PaymentButton from './PaymentButton';
 
 interface Beverage {
   id: number;
@@ -64,7 +64,6 @@ export default function BreakfastCard({ id, name, description, price, image }: B
   const [additionalNotes, setAdditionalNotes] = useState('');
   const [preferenceId, setPreferenceId] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isPaymentSidebarOpen, setIsPaymentSidebarOpen] = useState(false);
 
   const getTotalPrice = () => {
     const bowlPrice = includeCustomBowl ? customBowl.price : 0;
@@ -103,7 +102,6 @@ export default function BreakfastCard({ id, name, description, price, image }: B
 
       const data = await response.json();
       setPreferenceId(data.id);
-      setIsPaymentSidebarOpen(true);
     } catch (error) {
       console.error('Error creating preference:', error);
     } finally {
@@ -153,7 +151,7 @@ ${includeCustomBowl ? '🎨 Con Tazón Personalizado\n' : ''}
 
       {isModalOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-40"
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
           onClick={handleModalClose}
         >
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
@@ -279,13 +277,20 @@ ${includeCustomBowl ? '🎨 Con Tazón Personalizado\n' : ''}
                 <span className="text-primary">{formatPrice(getTotalPrice())}</span>
               </div>
               <div className="flex flex-col space-y-4">
-                <button
-                  onClick={handlePayment}
-                  disabled={!selectedTea || !selectedJuice || !selectedCake || isLoading}
-                  className="bg-primary text-white px-6 py-3 rounded-full font-semibold hover:bg-primary/90 transition disabled:opacity-50 disabled:cursor-not-allowed w-full"
-                >
-                  {isLoading ? 'Procesando...' : 'Pagar con Mercado Pago'}
-                </button>
+                {preferenceId ? (
+                  <PaymentButton 
+                    preferenceId={preferenceId} 
+                    publicKey={import.meta.env.PUBLIC_MERCADOPAGO_PUBLIC_KEY}
+                  />
+                ) : (
+                  <button
+                    onClick={handlePayment}
+                    disabled={!selectedTea || !selectedJuice || !selectedCake || isLoading}
+                    className="bg-primary text-white px-6 py-3 rounded-full font-semibold hover:bg-primary/90 transition disabled:opacity-50 disabled:cursor-not-allowed w-full"
+                  >
+                    {isLoading ? 'Procesando...' : 'Pagar con Mercado Pago'}
+                  </button>
+                )}
                 <button
                   onClick={handleWhatsAppOrder}
                   disabled={!selectedTea || !selectedJuice || !selectedCake}
@@ -303,13 +308,6 @@ ${includeCustomBowl ? '🎨 Con Tazón Personalizado\n' : ''}
           </div>
         </div>
       )}
-
-      <PaymentSidebar
-        isOpen={isPaymentSidebarOpen}
-        onClose={() => setIsPaymentSidebarOpen(false)}
-        preferenceId={preferenceId}
-        publicKey={import.meta.env.PUBLIC_MERCADOPAGO_PUBLIC_KEY}
-      />
     </>
   );
 }
