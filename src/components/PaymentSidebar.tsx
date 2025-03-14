@@ -10,8 +10,7 @@ interface PaymentSidebarProps {
 export default function PaymentSidebar({ isOpen, onClose, preferenceId, publicKey }: PaymentSidebarProps) {
   useEffect(() => {
     if (isOpen && preferenceId) {
-      // @ts-ignore
-      const mp = new (window as any).MercadoPago(publicKey);
+      const mp = new MercadoPago(publicKey);
       const checkout = mp.checkout({
         preference: {
           id: preferenceId,
