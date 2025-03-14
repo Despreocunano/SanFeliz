@@ -43,7 +43,7 @@ const cakes: Beverage[] = [
 const customBowl: Topping = {
   id: 1,
   name: "Tazón Personalizado con Nombre",
-  price: 6990
+  price: 5990
 };
 
 const formatPrice = (price: number) => {
