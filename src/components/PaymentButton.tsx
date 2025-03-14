@@ -10,7 +10,7 @@ export default function PaymentButton({ preferenceId, publicKey }: PaymentButton
 
   useEffect(() => {
     const loadMercadoPago = async () => {
-      const mp = new MercadoPago(publicKey, {
+      const mp = new (window as any).MercadoPago(publicKey, {
         locale: 'es-CL'
       });
 
