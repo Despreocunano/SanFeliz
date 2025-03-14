@@ -43,7 +43,15 @@ const cakes: Beverage[] = [
 const customBowl: Topping = {
   id: 1,
   name: "Tazón Personalizado con Nombre",
-  price: 8.99
+  price: 6990
+};
+
+const formatPrice = (price: number) => {
+  return new Intl.NumberFormat('es-CL', {
+    style: 'currency',
+    currency: 'CLP',
+    maximumFractionDigits: 0
+  }).format(price);
 };
 
 export default function BreakfastCard({ id, name, description, price, image }: BreakfastProps) {
@@ -56,7 +64,13 @@ export default function BreakfastCard({ id, name, description, price, image }: B
 
   const getTotalPrice = () => {
     const bowlPrice = includeCustomBowl ? customBowl.price : 0;
-    return (price + bowlPrice).toFixed(2);
+    return price + bowlPrice;
+  };
+
+  const handleModalClose = (e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
+    if (e.target === e.currentTarget) {
+      setIsModalOpen(false);
+    }
   };
 
   const handleWhatsAppOrder = () => {
@@ -71,7 +85,7 @@ export default function BreakfastCard({ id, name, description, price, image }: B
 🍰 Pastel: ${selectedCakeName}\n
 ${includeCustomBowl ? '🎨 Con Tazón Personalizado\n' : ''}
 📝 Notas adicionales: ${additionalNotes || 'Ninguna'}\n
-💰 Total: $${getTotalPrice()}`;
+💰 Total: ${formatPrice(getTotalPrice())}`;
 
     const whatsappUrl = `https://wa.me/+123456789?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
@@ -91,7 +105,7 @@ ${includeCustomBowl ? '🎨 Con Tazón Personalizado\n' : ''}
           <h3 className="text-xl font-display font-bold text-dark">{name}</h3>
           <p className="text-gray-600 mt-2 text-sm">{description}</p>
           <div className="mt-4 flex justify-between items-center">
-            <p className="text-primary font-bold text-xl">${price}</p>
+            <p className="text-primary font-bold text-xl">{formatPrice(price)}</p>
             <button className="text-white bg-primary px-4 py-2 rounded-full text-sm font-semibold hover:bg-secondary transition">
               Personalizar
             </button>
@@ -100,7 +114,10 @@ ${includeCustomBowl ? '🎨 Con Tazón Personalizado\n' : ''}
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+          onClick={handleModalClose}
+        >
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-start mb-6">
               <div>
@@ -108,7 +125,7 @@ ${includeCustomBowl ? '🎨 Con Tazón Personalizado\n' : ''}
                 <p className="text-gray-600 mt-2">{description}</p>
               </div>
               <button 
-                onClick={() => setIsModalOpen(false)}
+                onClick={handleModalClose}
                 className="text-gray-400 hover:text-gray-600"
               >
                 ✕
@@ -194,7 +211,7 @@ ${includeCustomBowl ? '🎨 Con Tazón Personalizado\n' : ''}
                     <p className="text-sm text-gray-600">Añade un toque personal a tu desayuno</p>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <span className="text-gray-600">+${customBowl.price}</span>
+                    <span className="text-gray-600">+{formatPrice(customBowl.price)}</span>
                     <input
                       type="checkbox"
                       checked={includeCustomBowl}
@@ -221,7 +238,7 @@ ${includeCustomBowl ? '🎨 Con Tazón Personalizado\n' : ''}
             <div className="border-t mt-6 pt-6">
               <div className="text-xl font-bold mb-6 flex justify-between">
                 <span>Total:</span>
-                <span className="text-primary">${getTotalPrice()}</span>
+                <span className="text-primary">{formatPrice(getTotalPrice())}</span>
               </div>
               <div className="flex space-x-4">
                 <button
