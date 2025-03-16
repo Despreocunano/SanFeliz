@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PaymentButton from './PaymentButton';
 
 interface Beverage {
   id: number;
@@ -62,8 +61,6 @@ export default function BreakfastCard({ id, name, description, price, image }: B
   const [selectedCake, setSelectedCake] = useState<number>(0);
   const [includeCustomBowl, setIncludeCustomBowl] = useState(false);
   const [additionalNotes, setAdditionalNotes] = useState('');
-  const [preferenceId, setPreferenceId] = useState<string>('');
-  const [isLoading, setIsLoading] = useState(false);
 
   const getTotalPrice = () => {
     const bowlPrice = includeCustomBowl ? customBowl.price : 0;
@@ -73,39 +70,6 @@ export default function BreakfastCard({ id, name, description, price, image }: B
   const handleModalClose = (e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
     if (e.target === e.currentTarget) {
       setIsModalOpen(false);
-    }
-  };
-
-  const handlePayment = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch('/api/create-preference', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          items: [
-            {
-              title: name,
-              quantity: 1,
-              currency_id: 'CLP',
-              unit_price: getTotalPrice()
-            }
-          ],
-          payer: {
-            name: "Test User",
-            email: "test.user@email.com"
-          }
-        }),
-      });
-
-      const data = await response.json();
-      setPreferenceId(data.id);
-    } catch (error) {
-      console.error('Error creating preference:', error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -276,25 +240,11 @@ ${includeCustomBowl ? '🎨 Con Tazón Personalizado\n' : ''}
                 <span>Total:</span>
                 <span className="text-primary">{formatPrice(getTotalPrice())}</span>
               </div>
-              <div className="flex flex-col space-y-4">
-                {preferenceId ? (
-                  <PaymentButton 
-                    preferenceId={preferenceId} 
-                    publicKey={import.meta.env.PUBLIC_MERCADOPAGO_PUBLIC_KEY}
-                  />
-                ) : (
-                  <button
-                    onClick={handlePayment}
-                    disabled={!selectedTea || !selectedJuice || !selectedCake || isLoading}
-                    className="bg-primary text-white px-6 py-3 rounded-full font-semibold hover:bg-primary/90 transition disabled:opacity-50 disabled:cursor-not-allowed w-full"
-                  >
-                    {isLoading ? 'Procesando...' : 'Pagar con Mercado Pago'}
-                  </button>
-                )}
+              <div className="flex space-x-4">
                 <button
                   onClick={handleWhatsAppOrder}
                   disabled={!selectedTea || !selectedJuice || !selectedCake}
-                  className="bg-green-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-600 transition disabled:opacity-50 disabled:cursor-not-allowed w-full"
+                  className="bg-green-500 text-white px-6 py-3 rounded-full flex-1 font-semibold hover:bg-green-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Ordenar por WhatsApp
                 </button>
