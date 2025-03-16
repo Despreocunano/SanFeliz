@@ -97,12 +97,12 @@ export default function BreakfastCard({ id, name, description, price, image, typ
       const selectedCakeName1 = cakes.find(c => c.id === selectedCake1)?.name || 'No seleccionado';
       const selectedCakeName2 = cakes.find(c => c.id === selectedCake2)?.name || 'No seleccionado';
       
-      message += `\nPersona 1:\n`;
+      message += `\Desayuno 1:\n`;
       message += `☕ Bebida Caliente: ${selectedTeaName1}\n`;
       message += `🥤 Jugo: ${selectedJuiceName1}\n`;
       message += `🍰 Pastel: ${selectedCakeName1}\n`;
       
-      message += `\nPersona 2:\n`;
+      message += `\Desayuno 2:\n`;
       message += `☕ Bebida Caliente: ${selectedTeaName2}\n`;
       message += `🥤 Jugo: ${selectedJuiceName2}\n`;
       message += `🍰 Pastel: ${selectedCakeName2}\n`;
@@ -189,9 +189,9 @@ export default function BreakfastCard({ id, name, description, price, image, typ
   const renderDoubleBreakfastOptions = () => (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Persona 1 */}
+        {/* Desayuno 1 */}
         <div className="space-y-6">
-          <h3 className="text-xl font-semibold text-primary">Persona 1</h3>
+          <h3 className="text-xl font-semibold text-primary">Desayuno 1</h3>
           
           <div>
             <h4 className="font-semibold text-lg mb-3">Té o Café:</h4>
@@ -257,9 +257,9 @@ export default function BreakfastCard({ id, name, description, price, image, typ
           </div>
         </div>
 
-        {/* Persona 2 */}
+        {/* Desayuno 2 */}
         <div className="space-y-6">
-          <h3 className="text-xl font-semibold text-primary">Persona 2</h3>
+          <h3 className="text-xl font-semibold text-primary">Desayuno 2</h3>
           
           <div>
             <h4 className="font-semibold text-lg mb-3">Té o Café:</h4>
