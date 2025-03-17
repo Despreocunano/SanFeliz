@@ -62,7 +62,9 @@ interface SelectionCounts {
 
 export default function BreakfastCard({ id, name, description, price, image, type = 'simple' }: BreakfastProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedTea1, setSelectedTea1] = useState<number>(0);
+  const [selectedTea, setSelectedTea] = useState<number>(0);
+  const [selectedJuice, setSelectedJuice] = useState<number>(0);
+  const [selectedCake, setSelectedCake] = useState<number>(0);
   const [teaCounts, setTeaCounts] = useState<SelectionCounts>({});
   const [juiceCounts, setJuiceCounts] = useState<SelectionCounts>({});
   const [cakeCounts, setCakeCounts] = useState<SelectionCounts>({});
@@ -132,8 +134,13 @@ export default function BreakfastCard({ id, name, description, price, image, typ
     let message = `¡Hola! Me gustaría ordenar:\n\n🍳 ${name}\n`;
 
     if (type === 'simple') {
-      const selectedTeaName = teas_and_coffees.find(t => t.id === selectedTea1)?.name || 'No seleccionado';
+      const selectedTeaName = teas_and_coffees.find(t => t.id === selectedTea)?.name || 'No seleccionado';
+      const selectedJuiceName = juices.find(j => j.id === selectedJuice)?.name || 'No seleccionado';
+      const selectedCakeName = cakes.find(c => c.id === selectedCake)?.name || 'No seleccionado';
+
       message += `☕ Bebida Caliente: ${selectedTeaName}\n`;
+      message += `🥤 Jugo: ${selectedJuiceName}\n`;
+      message += `🍰 Pastel: ${selectedCakeName}\n`;
     } else if (type === 'double') {
       message += '\nBebidas Calientes:\n';
       Object.entries(teaCounts).forEach(([id, count]) => {
@@ -181,7 +188,7 @@ export default function BreakfastCard({ id, name, description, price, image, typ
               key={beverage.id}
               className={`
                 flex items-center p-4 rounded-lg cursor-pointer transition border
-                ${selectedTea1 === beverage.id 
+                ${selectedTea === beverage.id 
                   ? 'border-primary bg-primary/5 text-primary' 
                   : 'border-gray-200 hover:border-primary/50'}
               `}
@@ -189,11 +196,63 @@ export default function BreakfastCard({ id, name, description, price, image, typ
               <input
                 type="radio"
                 name="tea_coffee"
-                checked={selectedTea1 === beverage.id}
-                onChange={() => setSelectedTea1(beverage.id)}
+                checked={selectedTea === beverage.id}
+                onChange={() => setSelectedTea(beverage.id)}
                 className="w-4 h-4 text-primary"
               />
               <span className="ml-3">{beverage.name}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h3 className="font-semibold text-lg mb-4">Selecciona tu Jugo:</h3>
+        <div className="grid grid-cols-1 gap-3">
+          {juices.map(juice => (
+            <label
+              key={juice.id}
+              className={`
+                flex items-center p-4 rounded-lg cursor-pointer transition border
+                ${selectedJuice === juice.id 
+                  ? 'border-primary bg-primary/5 text-primary' 
+                  : 'border-gray-200 hover:border-primary/50'}
+              `}
+            >
+              <input
+                type="radio"
+                name="juice"
+                checked={selectedJuice === juice.id}
+                onChange={() => setSelectedJuice(juice.id)}
+                className="w-4 h-4 text-primary"
+              />
+              <span className="ml-3">{juice.name}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h3 className="font-semibold text-lg mb-4">Selecciona tu Pastel:</h3>
+        <div className="grid grid-cols-1 gap-3">
+          {cakes.map(cake => (
+            <label
+              key={cake.id}
+              className={`
+                flex items-center p-4 rounded-lg cursor-pointer transition border
+                ${selectedCake === cake.id 
+                  ? 'border-primary bg-primary/5 text-primary' 
+                  : 'border-gray-200 hover:border-primary/50'}
+              `}
+            >
+              <input
+                type="radio"
+                name="cake"
+                checked={selectedCake === cake.id}
+                onChange={() => setSelectedCake(cake.id)}
+                className="w-4 h-4 text-primary"
+              />
+              <span className="ml-3">{cake.name}</span>
             </label>
           ))}
         </div>
@@ -283,7 +342,7 @@ export default function BreakfastCard({ id, name, description, price, image, typ
 
   const isFormValid = () => {
     if (type === 'simple') {
-      return selectedTea1 > 0;
+      return selectedTea > 0 && selectedJuice > 0 && selectedCake > 0;
     } else if (type === 'double') {
       return getTotalSelections(teaCounts) === 2 &&
              getTotalSelections(juiceCounts) === 2 &&
@@ -392,13 +451,13 @@ export default function BreakfastCard({ id, name, description, price, image, typ
                       : 'bg-gray-200 text-gray-500 cursor-not-allowed'}
                   `}
                 >
-                  Pedir por WhatsApp
+                  Ordenar por WhatsApp
                 </button>
               </div>
               {!isFormValid() && type !== 'bowl' && (
                 <p className="text-red-500 text-sm mt-2 text-center">
                   {type === 'simple' 
-                    ? 'Por favor selecciona tu bebida caliente'
+                    ? 'Por favor selecciona una opción de cada categoría'
                     : 'Por favor selecciona 2 opciones de cada categoría'}
                 </p>
               )}
