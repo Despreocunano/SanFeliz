@@ -56,16 +56,66 @@ const formatPrice = (price: number) => {
   }).format(price);
 };
 
+interface SelectionCounts {
+  [key: number]: number;
+}
+
 export default function BreakfastCard({ id, name, description, price, image, type = 'simple' }: BreakfastProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTea1, setSelectedTea1] = useState<number>(0);
-  const [selectedTea2, setSelectedTea2] = useState<number>(0);
-  const [selectedJuice1, setSelectedJuice1] = useState<number>(0);
-  const [selectedJuice2, setSelectedJuice2] = useState<number>(0);
-  const [selectedCake1, setSelectedCake1] = useState<number>(0);
-  const [selectedCake2, setSelectedCake2] = useState<number>(0);
+  const [teaCounts, setTeaCounts] = useState<SelectionCounts>({});
+  const [juiceCounts, setJuiceCounts] = useState<SelectionCounts>({});
+  const [cakeCounts, setCakeCounts] = useState<SelectionCounts>({});
   const [includeCustomBowl, setIncludeCustomBowl] = useState(false);
   const [additionalNotes, setAdditionalNotes] = useState('');
+
+  const getTotalSelections = (counts: SelectionCounts) => {
+    return Object.values(counts).reduce((sum, count) => sum + count, 0);
+  };
+
+  const handleCountChange = (
+    id: number,
+    counts: SelectionCounts,
+    setCounts: React.Dispatch<React.SetStateAction<SelectionCounts>>,
+    increment: boolean
+  ) => {
+    const currentCount = counts[id] || 0;
+    const totalSelections = getTotalSelections(counts);
+
+    if (increment && totalSelections >= 2) return;
+    if (!increment && currentCount === 0) return;
+
+    setCounts(prev => ({
+      ...prev,
+      [id]: increment ? (currentCount + 1) : (currentCount - 1)
+    }));
+  };
+
+  const SelectionButton = ({ 
+    id, 
+    counts, 
+    setCounts 
+  }: { 
+    id: number; 
+    counts: SelectionCounts; 
+    setCounts: React.Dispatch<React.SetStateAction<SelectionCounts>> 
+  }) => (
+    <div className="flex items-center space-x-2">
+      <button
+        onClick={() => handleCountChange(id, counts, setCounts, false)}
+        className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center"
+      >
+        -
+      </button>
+      <span className="w-8 text-center">{counts[id] || 0}</span>
+      <button
+        onClick={() => handleCountChange(id, counts, setCounts, true)}
+        className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center"
+      >
+        +
+      </button>
+    </div>
+  );
 
   const getTotalPrice = () => {
     const bowlPrice = includeCustomBowl ? customBowl.price : 0;
@@ -83,29 +133,31 @@ export default function BreakfastCard({ id, name, description, price, image, typ
 
     if (type === 'simple') {
       const selectedTeaName = teas_and_coffees.find(t => t.id === selectedTea1)?.name || 'No seleccionado';
-      const selectedJuiceName = juices.find(j => j.id === selectedJuice1)?.name || 'No seleccionado';
-      const selectedCakeName = cakes.find(c => c.id === selectedCake1)?.name || 'No seleccionado';
-      
       message += `☕ Bebida Caliente: ${selectedTeaName}\n`;
-      message += `🥤 Jugo: ${selectedJuiceName}\n`;
-      message += `🍰 Pastel: ${selectedCakeName}\n`;
     } else if (type === 'double') {
-      const selectedTeaName1 = teas_and_coffees.find(t => t.id === selectedTea1)?.name || 'No seleccionado';
-      const selectedTeaName2 = teas_and_coffees.find(t => t.id === selectedTea2)?.name || 'No seleccionado';
-      const selectedJuiceName1 = juices.find(j => j.id === selectedJuice1)?.name || 'No seleccionado';
-      const selectedJuiceName2 = juices.find(j => j.id === selectedJuice2)?.name || 'No seleccionado';
-      const selectedCakeName1 = cakes.find(c => c.id === selectedCake1)?.name || 'No seleccionado';
-      const selectedCakeName2 = cakes.find(c => c.id === selectedCake2)?.name || 'No seleccionado';
-      
-      message += `\Desayuno 1:\n`;
-      message += `☕ Bebida Caliente: ${selectedTeaName1}\n`;
-      message += `🥤 Jugo: ${selectedJuiceName1}\n`;
-      message += `🍰 Pastel: ${selectedCakeName1}\n`;
-      
-      message += `\Desayuno 2:\n`;
-      message += `☕ Bebida Caliente: ${selectedTeaName2}\n`;
-      message += `🥤 Jugo: ${selectedJuiceName2}\n`;
-      message += `🍰 Pastel: ${selectedCakeName2}\n`;
+      message += '\nBebidas Calientes:\n';
+      Object.entries(teaCounts).forEach(([id, count]) => {
+        if (count > 0) {
+          const tea = teas_and_coffees.find(t => t.id === Number(id));
+          message += `☕ ${tea?.name} x${count}\n`;
+        }
+      });
+
+      message += '\nJugos:\n';
+      Object.entries(juiceCounts).forEach(([id, count]) => {
+        if (count > 0) {
+          const juice = juices.find(j => j.id === Number(id));
+          message += `🥤 ${juice?.name} x${count}\n`;
+        }
+      });
+
+      message += '\nPasteles:\n';
+      Object.entries(cakeCounts).forEach(([id, count]) => {
+        if (count > 0) {
+          const cake = cakes.find(c => c.id === Number(id));
+          message += `🍰 ${cake?.name} x${count}\n`;
+        }
+      });
     }
 
     if (includeCustomBowl) {
@@ -120,212 +172,103 @@ export default function BreakfastCard({ id, name, description, price, image, typ
   };
 
   const renderSimpleBreakfastOptions = () => (
-    <>
+    <div className="space-y-8">
       <div>
-        <h3 className="font-semibold text-lg mb-3">Selecciona tu Té o Café:</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <h3 className="font-semibold text-lg mb-4">Selecciona tu Té o Café:</h3>
+        <div className="grid grid-cols-1 gap-3">
           {teas_and_coffees.map(beverage => (
-            <label key={beverage.id} className={`
-              flex items-center p-3 rounded-lg cursor-pointer transition
-              ${selectedTea1 === beverage.id ? 'bg-primary text-white' : 'bg-gray-50 hover:bg-gray-100'}
-            `}>
+            <label
+              key={beverage.id}
+              className={`
+                flex items-center p-4 rounded-lg cursor-pointer transition border
+                ${selectedTea1 === beverage.id 
+                  ? 'border-primary bg-primary/5 text-primary' 
+                  : 'border-gray-200 hover:border-primary/50'}
+              `}
+            >
               <input
                 type="radio"
                 name="tea_coffee"
                 checked={selectedTea1 === beverage.id}
                 onChange={() => setSelectedTea1(beverage.id)}
-                className="hidden"
+                className="w-4 h-4 text-primary"
               />
-              <span>{beverage.name}</span>
+              <span className="ml-3">{beverage.name}</span>
             </label>
           ))}
         </div>
       </div>
-
-      <div>
-        <h3 className="font-semibold text-lg mb-3">Elige tu Jugo:</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {juices.map(juice => (
-            <label key={juice.id} className={`
-              flex items-center p-3 rounded-lg cursor-pointer transition
-              ${selectedJuice1 === juice.id ? 'bg-primary text-white' : 'bg-gray-50 hover:bg-gray-100'}
-            `}>
-              <input
-                type="radio"
-                name="juice"
-                checked={selectedJuice1 === juice.id}
-                onChange={() => setSelectedJuice1(juice.id)}
-                className="hidden"
-              />
-              <span>{juice.name}</span>
-            </label>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <h3 className="font-semibold text-lg mb-3">Selecciona tu Pastel:</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {cakes.map(cake => (
-            <label key={cake.id} className={`
-              flex items-center p-3 rounded-lg cursor-pointer transition
-              ${selectedCake1 === cake.id ? 'bg-primary text-white' : 'bg-gray-50 hover:bg-gray-100'}
-            `}>
-              <input
-                type="radio"
-                name="cake"
-                checked={selectedCake1 === cake.id}
-                onChange={() => setSelectedCake1(cake.id)}
-                className="hidden"
-              />
-              <span>{cake.name}</span>
-            </label>
-          ))}
-        </div>
-      </div>
-    </>
+    </div>
   );
 
   const renderDoubleBreakfastOptions = () => (
-    <>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Desayuno 1 */}
-        <div className="space-y-6">
-          <h3 className="text-xl font-semibold text-primary">Desayuno 1</h3>
-          
-          <div>
-            <h4 className="font-semibold text-lg mb-3">Té o Café:</h4>
-            <div className="space-y-2">
-              {teas_and_coffees.map(beverage => (
-                <label key={beverage.id} className={`
-                  flex items-center p-3 rounded-lg cursor-pointer transition
-                  ${selectedTea1 === beverage.id ? 'bg-primary text-white' : 'bg-gray-50 hover:bg-gray-100'}
-                `}>
-                  <input
-                    type="radio"
-                    name="tea_coffee_1"
-                    checked={selectedTea1 === beverage.id}
-                    onChange={() => setSelectedTea1(beverage.id)}
-                    className="hidden"
-                  />
-                  <span>{beverage.name}</span>
-                </label>
-              ))}
+    <div className="space-y-8">
+      <div>
+        <h3 className="font-semibold text-lg mb-4">Bebidas Calientes (Elige hasta 2):</h3>
+        <div className="space-y-3">
+          {teas_and_coffees.map(beverage => (
+            <div
+              key={beverage.id}
+              className="flex items-center justify-between p-4 rounded-lg border border-gray-200"
+            >
+              <span>{beverage.name}</span>
+              <SelectionButton
+                id={beverage.id}
+                counts={teaCounts}
+                setCounts={setTeaCounts}
+              />
             </div>
-          </div>
-
-          <div>
-            <h4 className="font-semibold text-lg mb-3">Jugo:</h4>
-            <div className="space-y-2">
-              {juices.map(juice => (
-                <label key={juice.id} className={`
-                  flex items-center p-3 rounded-lg cursor-pointer transition
-                  ${selectedJuice1 === juice.id ? 'bg-primary text-white' : 'bg-gray-50 hover:bg-gray-100'}
-                `}>
-                  <input
-                    type="radio"
-                    name="juice_1"
-                    checked={selectedJuice1 === juice.id}
-                    onChange={() => setSelectedJuice1(juice.id)}
-                    className="hidden"
-                  />
-                  <span>{juice.name}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <h4 className="font-semibold text-lg mb-3">Pastel:</h4>
-            <div className="space-y-2">
-              {cakes.map(cake => (
-                <label key={cake.id} className={`
-                  flex items-center p-3 rounded-lg cursor-pointer transition
-                  ${selectedCake1 === cake.id ? 'bg-primary text-white' : 'bg-gray-50 hover:bg-gray-100'}
-                `}>
-                  <input
-                    type="radio"
-                    name="cake_1"
-                    checked={selectedCake1 === cake.id}
-                    onChange={() => setSelectedCake1(cake.id)}
-                    className="hidden"
-                  />
-                  <span>{cake.name}</span>
-                </label>
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
-
-        {/* Desayuno 2 */}
-        <div className="space-y-6">
-          <h3 className="text-xl font-semibold text-primary">Desayuno 2</h3>
-          
-          <div>
-            <h4 className="font-semibold text-lg mb-3">Té o Café:</h4>
-            <div className="space-y-2">
-              {teas_and_coffees.map(beverage => (
-                <label key={beverage.id} className={`
-                  flex items-center p-3 rounded-lg cursor-pointer transition
-                  ${selectedTea2 === beverage.id ? 'bg-primary text-white' : 'bg-gray-50 hover:bg-gray-100'}
-                `}>
-                  <input
-                    type="radio"
-                    name="tea_coffee_2"
-                    checked={selectedTea2 === beverage.id}
-                    onChange={() => setSelectedTea2(beverage.id)}
-                    className="hidden"
-                  />
-                  <span>{beverage.name}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <h4 className="font-semibold text-lg mb-3">Jugo:</h4>
-            <div className="space-y-2">
-              {juices.map(juice => (
-                <label key={juice.id} className={`
-                  flex items-center p-3 rounded-lg cursor-pointer transition
-                  ${selectedJuice2 === juice.id ? 'bg-primary text-white' : 'bg-gray-50 hover:bg-gray-100'}
-                `}>
-                  <input
-                    type="radio"
-                    name="juice_2"
-                    checked={selectedJuice2 === juice.id}
-                    onChange={() => setSelectedJuice2(juice.id)}
-                    className="hidden"
-                  />
-                  <span>{juice.name}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <h4 className="font-semibold text-lg mb-3">Pastel:</h4>
-            <div className="space-y-2">
-              {cakes.map(cake => (
-                <label key={cake.id} className={`
-                  flex items-center p-3 rounded-lg cursor-pointer transition
-                  ${selectedCake2 === cake.id ? 'bg-primary text-white' : 'bg-gray-50 hover:bg-gray-100'}
-                `}>
-                  <input
-                    type="radio"
-                    name="cake_2"
-                    checked={selectedCake2 === cake.id}
-                    onChange={() => setSelectedCake2(cake.id)}
-                    className="hidden"
-                  />
-                  <span>{cake.name}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-        </div>
+        <p className="text-sm text-gray-500 mt-2">
+          Seleccionados: {getTotalSelections(teaCounts)}/2
+        </p>
       </div>
-    </>
+
+      <div>
+        <h3 className="font-semibold text-lg mb-4">Jugos (Elige hasta 2):</h3>
+        <div className="space-y-3">
+          {juices.map(juice => (
+            <div
+              key={juice.id}
+              className="flex items-center justify-between p-4 rounded-lg border border-gray-200"
+            >
+              <span>{juice.name}</span>
+              <SelectionButton
+                id={juice.id}
+                counts={juiceCounts}
+                setCounts={setJuiceCounts}
+              />
+            </div>
+          ))}
+        </div>
+        <p className="text-sm text-gray-500 mt-2">
+          Seleccionados: {getTotalSelections(juiceCounts)}/2
+        </p>
+      </div>
+
+      <div>
+        <h3 className="font-semibold text-lg mb-4">Pasteles (Elige hasta 2):</h3>
+        <div className="space-y-3">
+          {cakes.map(cake => (
+            <div
+              key={cake.id}
+              className="flex items-center justify-between p-4 rounded-lg border border-gray-200"
+            >
+              <span>{cake.name}</span>
+              <SelectionButton
+                id={cake.id}
+                counts={cakeCounts}
+                setCounts={setCakeCounts}
+              />
+            </div>
+          ))}
+        </div>
+        <p className="text-sm text-gray-500 mt-2">
+          Seleccionados: {getTotalSelections(cakeCounts)}/2
+        </p>
+      </div>
+    </div>
   );
 
   const renderBowlOnlyOptions = () => (
@@ -340,10 +283,11 @@ export default function BreakfastCard({ id, name, description, price, image, typ
 
   const isFormValid = () => {
     if (type === 'simple') {
-      return selectedTea1 && selectedJuice1 && selectedCake1;
+      return selectedTea1 > 0;
     } else if (type === 'double') {
-      return selectedTea1 && selectedJuice1 && selectedCake1 &&
-             selectedTea2 && selectedJuice2 && selectedCake2;
+      return getTotalSelections(teaCounts) === 2 &&
+             getTotalSelections(juiceCounts) === 2 &&
+             getTotalSelections(cakeCounts) === 2;
     } else if (type === 'bowl') {
       return true;
     }
@@ -402,7 +346,7 @@ export default function BreakfastCard({ id, name, description, price, image, typ
 
               {/* Tazón Personalizado */}
               <div>
-                <label className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition cursor-pointer">
+                <label className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-primary/50 transition cursor-pointer">
                   <div>
                     <span className="font-semibold">{customBowl.name}</span>
                     <p className="text-sm text-gray-600">Añade un toque personal a tu desayuno</p>
@@ -413,7 +357,7 @@ export default function BreakfastCard({ id, name, description, price, image, typ
                       type="checkbox"
                       checked={includeCustomBowl}
                       onChange={(e) => setIncludeCustomBowl(e.target.checked)}
-                      className="form-checkbox h-5 w-5 text-primary rounded border-gray-300"
+                      className="w-5 h-5 text-primary rounded border-gray-300 focus:ring-primary"
                     />
                   </div>
                 </label>
@@ -426,7 +370,7 @@ export default function BreakfastCard({ id, name, description, price, image, typ
                   value={additionalNotes}
                   onChange={(e) => setAdditionalNotes(e.target.value)}
                   placeholder="Ejemplo: Alergias, preferencias especiales, dedicatoria..."
-                  className="w-full p-3 border rounded-lg focus:ring-primary focus:border-primary"
+                  className="w-full p-4 border border-gray-200 rounded-lg focus:ring-primary focus:border-primary"
                   rows={4}
                 />
               </div>
@@ -441,14 +385,21 @@ export default function BreakfastCard({ id, name, description, price, image, typ
                 <button
                   onClick={handleWhatsAppOrder}
                   disabled={!isFormValid()}
-                  className="bg-green-500 text-white px-6 py-3 rounded-full flex-1 font-semibold hover:bg-green-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  className={`
+                    w-full py-4 rounded-full font-semibold transition
+                    ${isFormValid()
+                      ? 'bg-green-500 hover:bg-green-600 text-white'
+                      : 'bg-gray-200 text-gray-500 cursor-not-allowed'}
+                  `}
                 >
                   Ordenar por WhatsApp
                 </button>
               </div>
               {!isFormValid() && type !== 'bowl' && (
                 <p className="text-red-500 text-sm mt-2 text-center">
-                  Por favor selecciona todas las opciones requeridas
+                  {type === 'simple' 
+                    ? 'Por favor selecciona tu bebida caliente'
+                    : 'Por favor selecciona 2 opciones de cada categoría'}
                 </p>
               )}
             </div>
