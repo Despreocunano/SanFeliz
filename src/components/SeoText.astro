@@ -1,0 +1,109 @@
+---
+---
+<section class="bg-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <details class="group" id="seoDetails">
+        <summary class="list-none">
+          <div class="space-y-6">
+            <h2 class="text-2xl font-display font-bold text-dark">Desayunos a Domicilio en San Feliz y Los Andes</h2>
+            <p class="text-gray-600 line-clamp-3">
+              Descubre la experiencia única de recibir un desayuno especial a domicilio en Santiago. Nuestro servicio de desayunos sorpresa está diseñado para hacer de cada ocasión un momento inolvidable, ya sea un cumpleaños, aniversario, día especial o simplemente para demostrar tu cariño a esa persona especial.
+            </p>
+            <div class="flex items-center text-primary font-semibold cursor-pointer group-open:hidden">
+              Leer más
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 transition group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+        </summary>
+  
+        <div class="mt-8 space-y-6 text-gray-600 animate-fadeIn">
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <h3 class="text-xl font-semibold text-dark mb-4">Desayunos Personalizados para Cada Ocasión</h3>
+              <p>
+                Ofrecemos una amplia variedad de opciones para personalizar tu desayuno. Desde deliciosos waffles y pancakes hasta opciones saludables como bowls de açaí y granola casera. Cada desayuno incluye bebidas premium como café de especialidad, tés selectos y jugos naturales recién preparados.
+              </p>
+            </div>
+  
+            <div>
+              <h3 class="text-xl font-semibold text-dark mb-4">Servicio de Entrega Garantizado</h3>
+              <p>
+                Realizamos entregas en todo Santiago, asegurando que tu desayuno llegue puntual y en perfectas condiciones. Nuestro equipo de profesionales cuida cada detalle, desde la preparación hasta la presentación final, garantizando una experiencia excepcional.
+              </p>
+            </div>
+  
+            <div>
+              <h3 class="text-xl font-semibold text-dark mb-4">Productos Frescos y de Calidad</h3>
+              <p>
+                Trabajamos con ingredientes frescos y de primera calidad. Nuestros proveedores son cuidadosamente seleccionados para garantizar que cada componente de tu desayuno cumpla con los más altos estándares de calidad y frescura.
+              </p>
+            </div>
+  
+            <div>
+              <h3 class="text-xl font-semibold text-dark mb-4">Opciones para Todos los Gustos</h3>
+              <p>
+                Ya sea que prefieras un desayuno tradicional, vegetariano, vegano o sin gluten, tenemos opciones para satisfacer todos los gustos y necesidades dietéticas. Cada desayuno puede ser personalizado según tus preferencias específicas.
+              </p>
+            </div>
+          </div>
+  
+          <div class="bg-gray-50 p-6 rounded-xl mt-8">
+            <h3 class="text-xl font-semibold text-dark mb-4">¿Por Qué Elegir Nuestros Desayunos?</h3>
+            <ul class="list-disc list-inside space-y-2 ml-4">
+              <li>Ingredientes frescos y de alta calidad</li>
+              <li>Entrega puntual garantizada</li>
+              <li>Presentación cuidada y profesional</li>
+              <li>Opciones personalizables</li>
+              <li>Atención al cliente excepcional</li>
+              <li>Cobertura en toda el área de Santiago</li>
+            </ul>
+          </div>
+  
+          <button 
+            id="showLessBtn"
+            class="flex items-center text-primary font-semibold cursor-pointer hover:text-primary/80 transition-colors"
+          >
+            Mostrar menos
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        </div>
+      </details>
+    </div>
+  </section>
+  
+  <script>
+    const details = document.getElementById('seoDetails');
+    const showLessBtn = document.getElementById('showLessBtn');
+  
+    if (showLessBtn && details) {
+      showLessBtn.addEventListener('click', () => {
+        details.removeAttribute('open');
+      });
+    }
+  </script>
+  
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  
+    .animate-fadeIn {
+      animation: fadeIn 0.3s ease-out;
+    }
+  
+    details[open] summary ~ * {
+      animation: fadeIn 0.3s ease-out;
+    }
+  
+    .line-clamp-3 {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  </style>
