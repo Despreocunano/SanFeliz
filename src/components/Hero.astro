@@ -1,55 +1,52 @@
 ---
 ---
-<div class="relative min-h-screen bg-gradient-to-br from-primary via-primary to-secondary overflow-hidden">
-  <div class="absolute inset-0">
-    <div class="absolute inset-0 bg-gradient-to-br from-primary/80 to-secondary/80"></div>
-    <img 
-      src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=1200" 
-      alt="Breakfast background" 
-      class="w-full h-full object-cover"
-    />
+<div class="relative bg-white">
+  {/* Background Pattern */}
+  <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5">
+    <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FF6B2B' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');">
+    </div>
   </div>
 
-  <div class="relative">
+  <div class="relative max-w-7xl mx-auto">
     <slot name="header" />
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-32">
-      <div class="grid lg:grid-cols-2 gap-12 items-center">
-        <div class="text-left space-y-8">
-          <div class="space-y-4">
-            <span class="inline-flex items-center text-white text-sm font-semibold px-4 py-1.5 bg-white/20 rounded-full backdrop-blur-sm">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-              </svg>
-              ¡Más de 1000 clientes felices!
-            </span>
+    <div class="px-4 sm:px-6 lg:px-8 pt-32 pb-20 lg:pt-40 lg:pb-28">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div class="relative z-10">
+          {/* Badge */}
+          <div class="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 mb-8">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+            </svg>
+            <span class="ml-2 text-primary font-semibold">Más de 1000 clientes felices</span>
           </div>
-          
-          <h1 class="text-5xl sm:text-6xl lg:text-7xl font-display font-bold text-white leading-tight">
+
+          {/* Main Heading */}
+          <h1 class="text-5xl lg:text-6xl xl:text-7xl font-display font-bold text-dark leading-tight">
             Desayunos que
-            <span class="relative inline-block mt-2">
-              Crean Momentos
-              <div class="absolute -bottom-2 left-0 w-full">
-                <svg width="100%" height="12" viewBox="0 0 400 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M3 9C133.333 4.33333 326.667 4.33333 397 9" stroke="#FF6B2B" stroke-width="6" stroke-linecap="round"/>
-                </svg>
-              </div>
+            <span class="relative mt-2 block">
+              <span class="relative z-10 text-primary">Crean Momentos</span>
+              <svg class="absolute -bottom-2 left-0 w-full h-3 text-primary/20" viewBox="0 0 400 9" fill="none">
+                <path d="M0 7C150 4 250 4 400 7" stroke="currentColor" stroke-width="4"/>
+              </svg>
             </span>
           </h1>
-          
-          <p class="text-xl text-white/90 leading-relaxed">
+
+          {/* Description */}
+          <p class="mt-8 text-xl text-gray-600 leading-relaxed max-w-2xl">
             Sorprende a tus seres queridos con desayunos únicos y personalizados. 
-            Hacemos de cada mañana una experiencia inolvidable.
+            Hacemos de cada mañana una experiencia inolvidable con ingredientes frescos y presentaciones exclusivas.
           </p>
 
-          <div class="flex flex-wrap gap-4">
+          {/* CTA Buttons */}
+          <div class="mt-10 flex flex-wrap gap-4">
             <button 
               onclick="document.getElementById('menu').scrollIntoView({behavior: 'smooth'})"
-              class="bg-white text-primary hover:text-white hover:bg-primary border-2 border-transparent px-8 py-4 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 inline-flex items-center space-x-2"
+              class="inline-flex items-center px-8 py-4 rounded-full bg-primary text-white font-semibold hover:bg-primary/90 transition-all duration-200 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30"
             >
-              <span>Ver Menú</span>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+              Ver Menú
+              <svg class="ml-2 -mr-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 10.293a1 1 0 010 1.414l-6 6a1 1 0 01-1.414 0l-6-6a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l4.293-4.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
               </svg>
             </button>
             
@@ -57,37 +54,90 @@
               href="https://wa.me/+123456789" 
               target="_blank" 
               rel="noopener noreferrer"
-              class="bg-green-500 text-white hover:bg-green-600 px-8 py-4 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 inline-flex items-center space-x-2"
+              class="inline-flex items-center px-8 py-4 rounded-full bg-green-500 text-white font-semibold hover:bg-green-600 transition-all duration-200 shadow-lg shadow-green-500/25 hover:shadow-xl hover:shadow-green-500/30"
             >
-              <span>Ordenar Ahora</span>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.04 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M8.53 7.33C8.37 7.33 8.1 7.39 7.87 7.64C7.65 7.89 7 8.5 7 9.71C7 10.93 7.89 12.1 8 12.27C8.14 12.44 9.76 14.94 12.25 16C12.84 16.27 13.3 16.42 13.66 16.53C14.25 16.72 14.79 16.69 15.22 16.63C15.7 16.56 16.68 16.03 16.89 15.45C17.1 14.87 17.1 14.38 17.04 14.27C16.97 14.17 16.81 14.11 16.56 14C16.31 13.86 15.09 13.26 14.87 13.18C14.64 13.1 14.5 13.06 14.31 13.3C14.15 13.55 13.67 14.11 13.53 14.27C13.38 14.44 13.24 14.46 13 14.34C12.74 14.21 11.94 13.95 11 13.11C10.26 12.45 9.77 11.64 9.62 11.39C9.5 11.15 9.61 11 9.73 10.89C9.84 10.78 10 10.6 10.1 10.45C10.23 10.31 10.27 10.2 10.35 10.04C10.43 9.87 10.39 9.73 10.33 9.61C10.27 9.5 9.77 8.26 9.56 7.77C9.36 7.29 9.16 7.35 9 7.34C8.86 7.34 8.7 7.33 8.53 7.33Z"/>
+              Ordenar Ahora
+              <svg class="ml-2 -mr-1 w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.04 14.69 2 12.04 2Z"/>
               </svg>
             </a>
           </div>
 
-          <div class="flex items-center space-x-8 pt-8">
-            <div class="flex -space-x-4">
-              <img class="w-10 h-10 rounded-full border-2 border-white" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" alt="Cliente" />
-              <img class="w-10 h-10 rounded-full border-2 border-white" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100" alt="Cliente" />
-              <img class="w-10 h-10 rounded-full border-2 border-white" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" alt="Cliente" />
+          {/* Social Proof */}
+          <div class="mt-12 flex items-center space-x-8 border-t border-gray-100 pt-8">
+            <div class="flex -space-x-3">
+              <div class="w-12 h-12 rounded-full border-2 border-white overflow-hidden shadow-lg">
+                <img 
+                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100"
+                  alt="Cliente satisfecho"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <div class="w-12 h-12 rounded-full border-2 border-white overflow-hidden shadow-lg">
+                <img 
+                  src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100"
+                  alt="Cliente satisfecho"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <div class="w-12 h-12 rounded-full border-2 border-white overflow-hidden shadow-lg">
+                <img 
+                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100"
+                  alt="Cliente satisfecho"
+                  class="w-full h-full object-cover"
+                />
+              </div>
             </div>
-            <div class="text-white">
-              <div class="font-semibold">+1000 Clientes Felices</div>
-              <div class="text-white/80 text-sm">⭐️ 4.9/5 Calificación</div>
+            <div>
+              <div class="font-semibold text-dark">+1000 Clientes Felices</div>
+              <div class="text-sm text-gray-500 flex items-center">
+                <span class="text-yellow-400">★★★★★</span>
+                <span class="ml-1">4.9/5 Calificación</span>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="relative hidden lg:block">
-          <div class="absolute -top-8 -right-8 w-72 h-72 bg-primary/30 rounded-full filter blur-3xl"></div>
-          <div class="absolute -bottom-8 -left-8 w-72 h-72 bg-secondary/30 rounded-full filter blur-3xl"></div>
+        {/* Hero Images */}
+        <div class="relative lg:block">
           <div class="relative">
-            <img 
-              src="https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=600" 
-              alt="Desayuno especial" 
-              class="rounded-2xl shadow-2xl transform rotate-2 hover:rotate-0 transition-transform duration-300"
-            />
+            <div class="absolute -top-4 -left-4 w-72 h-72 bg-primary/10 rounded-full filter blur-3xl animate-pulse"></div>
+            <div class="absolute -bottom-4 -right-4 w-72 h-72 bg-secondary/10 rounded-full filter blur-3xl animate-pulse"></div>
+            
+            <div class="relative grid grid-cols-2 gap-4">
+              <div class="space-y-4">
+                <div class="rounded-2xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                  <img 
+                    src="https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=600" 
+                    alt="Desayuno especial" 
+                    class="w-full h-48 object-cover"
+                  />
+                </div>
+                <div class="rounded-2xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                  <img 
+                    src="https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=600" 
+                    alt="Desayuno gourmet" 
+                    class="w-full h-64 object-cover"
+                  />
+                </div>
+              </div>
+              <div class="space-y-4 mt-8">
+                <div class="rounded-2xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                  <img 
+                    src="https://images.unsplash.com/photo-1496042399014-dc73c4f2bde1?w=600" 
+                    alt="Desayuno romántico" 
+                    class="w-full h-64 object-cover"
+                  />
+                </div>
+                <div class="rounded-2xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                  <img 
+                    src="https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=600" 
+                    alt="Desayuno healthy" 
+                    class="w-full h-48 object-cover"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
