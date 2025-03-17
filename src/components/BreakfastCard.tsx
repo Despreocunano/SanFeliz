@@ -392,7 +392,7 @@ export default function BreakfastCard({ id, name, description, price, image, typ
                       : 'bg-gray-200 text-gray-500 cursor-not-allowed'}
                   `}
                 >
-                  Ordenar por WhatsApp
+                  Pedir por WhatsApp
                 </button>
               </div>
               {!isFormValid() && type !== 'bowl' && (
