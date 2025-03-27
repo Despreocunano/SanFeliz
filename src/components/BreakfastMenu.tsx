@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import BreakfastCategories from './BreakfastCategories';
 import BreakfastCard from './BreakfastCard';
-import { breakfasts, breakfastCategories } from '../data/breakfasts';
+import { breakfasts, breakfastCategories } from '../data/breakfast';
 
 export default function BreakfastMenu() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
