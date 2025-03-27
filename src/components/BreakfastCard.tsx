@@ -22,17 +22,17 @@ interface BreakfastProps {
 }
 
 const teas_and_coffees: Beverage[] = [
-  { id: 1, name: "Café de Altura Premium" },
-  { id: 2, name: "Té Verde con Jazmín" },
+  { id: 1, name: "Café Premium Marley" },
+  { id: 2, name: "Té Premium Early Gray Bravo" },
   { id: 3, name: "Café Mocha con Canela" },
   { id: 4, name: "Té Chai Especiado" }
 ];
 
 const juices: Beverage[] = [
-  { id: 1, name: "Jugo de Naranja y Zanahoria" },
-  { id: 2, name: "Jugo Verde Detox" },
-  { id: 3, name: "Jugo de Frutos Rojos" },
-  { id: 4, name: "Jugo Tropical de Mango y Maracuyá" }
+  { id: 1, name: "Jugo de Manzana" },
+  { id: 2, name: "Jugo de Manzana Mango" },
+  { id: 3, name: "Jugo de Manzana Pera" },
+  { id: 4, name: "Jugo de Manzana Durazo" }
 ];
 
 const cakes: Beverage[] = [
@@ -45,7 +45,7 @@ const cakes: Beverage[] = [
 const customBowl: Topping = {
   id: 1,
   name: "Tazón Personalizado con Nombre",
-  price: 6990
+  price: 4990
 };
 
 const formatPrice = (price: number) => {
