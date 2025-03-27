@@ -25,7 +25,7 @@ const teas_and_coffees: Beverage[] = [
   { id: 1, name: "Café Premium Juan Valdez" },
   { id: 2, name: "Té Premium Early Gray Bravo" },
   { id: 3, name: "Te Premium Malasia Chai" },
-  { id: 4, name: "Hierbas Explosión de Berries" }
+  { id: 4, name: "Ifusión de Hierbas Explosión de Berries" }
 ];
 
 const juices: Beverage[] = [
