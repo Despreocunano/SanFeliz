@@ -44,7 +44,7 @@ const cakes: Beverage[] = [
 
 const customBowl: Topping = {
   id: 1,
-  name: "Tazón Personalizado con Nombre",
+  name: "Tazón Personalizado",
   price: 4990
 };
 
@@ -408,7 +408,7 @@ export default function BreakfastCard({ id, name, description, price, image, typ
                 <label className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-primary/50 transition cursor-pointer">
                   <div>
                     <span className="font-semibold">{customBowl.name}</span>
-                    <p className="text-sm text-gray-600">Añade un toque personal a tu desayuno</p>
+                    <p className="text-sm text-gray-600">Añade un toque personal</p>
                   </div>
                   <div className="flex items-center space-x-3">
                     <span className="text-gray-600">+{formatPrice(customBowl.price)}</span>
