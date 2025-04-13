@@ -36,10 +36,10 @@ const juices: Beverage[] = [
 ];
 
 const cakes: Beverage[] = [
-  { id: 1, name: "Red Velvet" },
-  { id: 2, name: "Torta de Zanahoria con Frosting" },
-  { id: 3, name: "Cheesecake de Frutos del Bosque" },
-  { id: 4, name: "Torta de Chocolate Belga" }
+  { id: 1, name: "Pie de Limón" },
+  { id: 2, name: "Kuchen de Frutos Rojos" },
+  { id: 3, name: "Torta de Durazno Crema" },
+  { id: 4, name: "Torta Manjar Nuez" }
 ];
 
 const customBowl: Topping = {
