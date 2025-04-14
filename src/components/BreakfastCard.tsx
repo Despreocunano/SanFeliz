@@ -151,7 +151,7 @@ export default function BreakfastCard({
     message += `\n📝 Notas adicionales: ${additionalNotes || 'Ninguna'}\n`;
     message += `\n💰 Total: ${formatPrice(getTotalPrice())}`;
 
-    const whatsappUrl = `https://wa.me/+5696744 9210?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `+56967449210?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 
