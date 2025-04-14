@@ -1,19 +1,17 @@
 export type BreakfastType = 'simple' | 'double' | 'bowl';
 
+export interface BreakfastCategory {
+  name: string;
+  description: string;
+  icon: string;
+}
+
 export interface Breakfast {
-  id: number;
-  categoryId: string;
   name: string;
   description: string;
   price: number;
   image: string;
   type: BreakfastType;
+  category: BreakfastCategory;
   featured: boolean;
-}
-
-export interface BreakfastCategory {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
 }

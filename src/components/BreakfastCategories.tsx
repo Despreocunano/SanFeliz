@@ -1,10 +1,10 @@
 import React from 'react';
-import type { BreakfastCategory } from '../types/breakfast';
+import type { BreakfastCategory } from '../lib/contentful';
 
 interface Props {
   categories: BreakfastCategory[];
   selectedCategory: string | null;
-  onSelectCategory: (categoryId: string | null) => void;
+  onSelectCategory: (categoryName: string | null) => void;
 }
 
 export default function BreakfastCategories({ 
@@ -28,11 +28,11 @@ export default function BreakfastCategories({
         </button>
         {categories.map(category => (
           <button
-            key={category.id}
-            onClick={() => onSelectCategory(category.id)}
+            key={category.name}
+            onClick={() => onSelectCategory(category.name)}
             className={`
               px-6 py-3 rounded-full font-semibold transition-all whitespace-nowrap
-              ${selectedCategory === category.id 
+              ${selectedCategory === category.name 
                 ? 'bg-primary text-white shadow-lg shadow-primary/25' 
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}
             `}

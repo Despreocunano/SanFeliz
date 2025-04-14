@@ -1,0 +1,87 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import { getBlogPost } from '../../lib/contentful';
+import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
+
+export async function getStaticPaths() {
+  const response = await fetch(`${import.meta.env.CONTENTFUL_GRAPHQL_URL}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${import.meta.env.CONTENTFUL_ACCESS_TOKEN}`,
+    },
+    body: JSON.stringify({
+      query: `
+        query {
+          blogPostCollection {
+            items {
+              slug
+            }
+          }
+        }
+      `,
+    }),
+  });
+
+  const { data } = await response.json();
+  return data.blogPostCollection.items.map((post: any) => ({
+    params: { slug: post.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const post = await getBlogPost(slug as string);
+
+if (!post) {
+  return Astro.redirect('/404');
+}
+
+const content = documentToHtmlString(post.content);
+
+function formatDate(date: string) {
+  return new Date(date).toLocaleDateString('es-ES', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+}
+---
+
+<Layout title={`${post.title} - Blog San Feliz`}>
+  <Header />
+  
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+    <article class="prose prose-lg mx-auto">
+      <img 
+        src={post.featuredImage.fields.file.url}
+        alt={post.title}
+        class="w-full h-[400px] object-cover rounded-2xl mb-8"
+      />
+      
+      <p class="text-gray-500">{formatDate(post.publishDate)}</p>
+      <h1 class="text-4xl font-display font-bold text-dark mt-2 mb-8">{post.title}</h1>
+      
+      <div class="prose prose-lg prose-primary" set:html={content} />
+    </article>
+  </main>
+</Layout>
+
+<style>
+  .prose {
+    max-width: 65ch;
+  }
+  
+  .prose img {
+    border-radius: 1rem;
+  }
+  
+  .prose a {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+  
+  .prose a:hover {
+    text-decoration: underline;
+  }
+</style>

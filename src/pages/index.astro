@@ -5,6 +5,7 @@ import Hero from '../components/Hero.astro';
 import FeaturedBreakfast from '../components/FeaturedBreakfast.astro';
 import SeoText from '../components/SeoText.astro';
 import BreakfastMenu from '../components/BreakfastMenu';
+import { getBreakfasts, getBreakfastCategories, getBeverages, getCakes } from '../lib/contentful';
 
 const featuredBreakfast = {
   title: "Desayuno del día",
@@ -32,6 +33,11 @@ const featuredBreakfast = {
     }
   ]
 };
+
+const breakfasts = await getBreakfasts();
+const categories = await getBreakfastCategories();
+const beverages = await getBeverages();
+const cakes = await getCakes();
 ---
 
 <Layout>
@@ -48,7 +54,13 @@ const featuredBreakfast = {
         Cada desayuno está preparado con ingredientes frescos y puede personalizarse según tus preferencias.
       </p>
 
-      <BreakfastMenu client:load />
+      <BreakfastMenu 
+        breakfasts={breakfasts} 
+        categories={categories}
+        beverages={beverages}
+        cakes={cakes}
+        client:load 
+      />
     </div>
   </main>
 

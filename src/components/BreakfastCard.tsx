@@ -1,52 +1,20 @@
 import React, { useState } from 'react';
+import type { Beverage, Cake } from '../lib/contentful';
 
-interface Beverage {
-  id: number;
-  name: string;
-}
-
-interface Topping {
-  id: number;
-  name: string;
-  price: number;
-}
-
-interface BreakfastProps {
-  id: number;
+interface Props {
   name: string;
   description: string;
   price: number;
   image: string;
   type?: 'simple' | 'double' | 'bowl';
+  beverages: Beverage[];
+  cakes: Cake[];
   'client:load'?: boolean;
 }
 
-const teas_and_coffees: Beverage[] = [
-  { id: 1, name: "Café Premium Juan Valdez" },
-  { id: 2, name: "Té Premium Early Gray Bravo" },
-  { id: 3, name: "Te Premium Malasia Chai" },
-  { id: 4, name: "Infusión Explosión de Berries" }
-];
-
-const juices: Beverage[] = [
-  { id: 1, name: "Jugo de Manzana" },
-  { id: 2, name: "Jugo de Manzana Mango" },
-  { id: 3, name: "Jugo de Manzana Pera" },
-  { id: 4, name: "Jugo de Manzana Durazo" }
-];
-
-const cakes: Beverage[] = [
-  { id: 1, name: "Pie de Limón" },
-  { id: 2, name: "Kuchen de Frutos Rojos" },
-  { id: 3, name: "Torta de Durazno Crema" },
-  { id: 4, name: "Torta Manjar Nuez" }
-];
-
-const customBowl: Topping = {
-  id: 1,
-  name: "Tazón Personalizado",
-  price: 4990
-};
+interface SelectionCounts {
+  [key: string]: number;
+}
 
 const formatPrice = (price: number) => {
   return new Intl.NumberFormat('es-CL', {
@@ -56,32 +24,44 @@ const formatPrice = (price: number) => {
   }).format(price);
 };
 
-interface SelectionCounts {
-  [key: number]: number;
-}
-
-export default function BreakfastCard({ id, name, description, price, image, type = 'simple' }: BreakfastProps) {
+export default function BreakfastCard({ 
+  name, 
+  description, 
+  price, 
+  image, 
+  type = 'simple',
+  beverages,
+  cakes
+}: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedTea, setSelectedTea] = useState<number>(0);
-  const [selectedJuice, setSelectedJuice] = useState<number>(0);
-  const [selectedCake, setSelectedCake] = useState<number>(0);
-  const [teaCounts, setTeaCounts] = useState<SelectionCounts>({});
-  const [juiceCounts, setJuiceCounts] = useState<SelectionCounts>({});
+  const [selectedHotBeverage, setSelectedHotBeverage] = useState<string>('');
+  const [selectedColdBeverage, setSelectedColdBeverage] = useState<string>('');
+  const [selectedCake, setSelectedCake] = useState<string>('');
+  const [hotBeverageCounts, setHotBeverageCounts] = useState<SelectionCounts>({});
+  const [coldBeverageCounts, setColdBeverageCounts] = useState<SelectionCounts>({});
   const [cakeCounts, setCakeCounts] = useState<SelectionCounts>({});
   const [includeCustomBowl, setIncludeCustomBowl] = useState(false);
   const [additionalNotes, setAdditionalNotes] = useState('');
+
+  const hotBeverages = beverages.filter(b => b.type === 'hot');
+  const coldBeverages = beverages.filter(b => b.type === 'cold');
+
+  const customBowl = {
+    name: "Tazón Personalizado",
+    price: 4990
+  };
 
   const getTotalSelections = (counts: SelectionCounts) => {
     return Object.values(counts).reduce((sum, count) => sum + count, 0);
   };
 
   const handleCountChange = (
-    id: number,
+    name: string,
     counts: SelectionCounts,
     setCounts: React.Dispatch<React.SetStateAction<SelectionCounts>>,
     increment: boolean
   ) => {
-    const currentCount = counts[id] || 0;
+    const currentCount = counts[name] || 0;
     const totalSelections = getTotalSelections(counts);
 
     if (increment && totalSelections >= 2) return;
@@ -89,29 +69,29 @@ export default function BreakfastCard({ id, name, description, price, image, typ
 
     setCounts(prev => ({
       ...prev,
-      [id]: increment ? (currentCount + 1) : (currentCount - 1)
+      [name]: increment ? (currentCount + 1) : (currentCount - 1)
     }));
   };
 
   const SelectionButton = ({ 
-    id, 
+    name, 
     counts, 
     setCounts 
   }: { 
-    id: number; 
+    name: string; 
     counts: SelectionCounts; 
     setCounts: React.Dispatch<React.SetStateAction<SelectionCounts>> 
   }) => (
     <div className="flex items-center space-x-2">
       <button
-        onClick={() => handleCountChange(id, counts, setCounts, false)}
+        onClick={() => handleCountChange(name, counts, setCounts, false)}
         className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center"
       >
         -
       </button>
-      <span className="w-8 text-center">{counts[id] || 0}</span>
+      <span className="w-8 text-center">{counts[name] || 0}</span>
       <button
-        onClick={() => handleCountChange(id, counts, setCounts, true)}
+        onClick={() => handleCountChange(name, counts, setCounts, true)}
         className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center"
       >
         +
@@ -134,35 +114,32 @@ export default function BreakfastCard({ id, name, description, price, image, typ
     let message = `¡Hola! Me gustaría ordenar:\n\n🍳 ${name}\n`;
 
     if (type === 'simple') {
-      const selectedTeaName = teas_and_coffees.find(t => t.id === selectedTea)?.name || 'No seleccionado';
-      const selectedJuiceName = juices.find(j => j.id === selectedJuice)?.name || 'No seleccionado';
-      const selectedCakeName = cakes.find(c => c.id === selectedCake)?.name || 'No seleccionado';
+      const selectedHotBeverageName = hotBeverages.find(b => b.name === selectedHotBeverage)?.name || 'No seleccionado';
+      const selectedColdBeverageName = coldBeverages.find(b => b.name === selectedColdBeverage)?.name || 'No seleccionado';
+      const selectedCakeName = cakes.find(c => c.name === selectedCake)?.name || 'No seleccionado';
 
-      message += `☕ Bebida Caliente: ${selectedTeaName}\n`;
-      message += `🥤 Jugo: ${selectedJuiceName}\n`;
+      message += `☕ Bebida Caliente: ${selectedHotBeverageName}\n`;
+      message += `🥤 Bebida Fría: ${selectedColdBeverageName}\n`;
       message += `🍰 Pastel: ${selectedCakeName}\n`;
     } else if (type === 'double') {
       message += '\nBebidas Calientes:\n';
-      Object.entries(teaCounts).forEach(([id, count]) => {
+      Object.entries(hotBeverageCounts).forEach(([name, count]) => {
         if (count > 0) {
-          const tea = teas_and_coffees.find(t => t.id === Number(id));
-          message += `☕ ${tea?.name} x${count}\n`;
+          message += `☕ ${name} x${count}\n`;
         }
       });
 
-      message += '\nJugos:\n';
-      Object.entries(juiceCounts).forEach(([id, count]) => {
+      message += '\nBebidas Frías:\n';
+      Object.entries(coldBeverageCounts).forEach(([name, count]) => {
         if (count > 0) {
-          const juice = juices.find(j => j.id === Number(id));
-          message += `🥤 ${juice?.name} x${count}\n`;
+          message += `🥤 ${name} x${count}\n`;
         }
       });
 
       message += '\nPasteles:\n';
-      Object.entries(cakeCounts).forEach(([id, count]) => {
+      Object.entries(cakeCounts).forEach(([name, count]) => {
         if (count > 0) {
-          const cake = cakes.find(c => c.id === Number(id));
-          message += `🍰 ${cake?.name} x${count}\n`;
+          message += `🍰 ${name} x${count}\n`;
         }
       });
     }
@@ -183,21 +160,21 @@ export default function BreakfastCard({ id, name, description, price, image, typ
       <div>
         <h3 className="font-semibold text-lg mb-4">Selecciona tu Té o Café:</h3>
         <div className="grid grid-cols-1 gap-3">
-          {teas_and_coffees.map(beverage => (
+          {hotBeverages.map(beverage => (
             <label
-              key={beverage.id}
+              key={beverage.name}
               className={`
                 flex items-center p-4 rounded-lg cursor-pointer transition border
-                ${selectedTea === beverage.id 
+                ${selectedHotBeverage === beverage.name 
                   ? 'border-primary bg-primary/5 text-primary' 
                   : 'border-gray-200 hover:border-primary/50'}
               `}
             >
               <input
                 type="radio"
-                name="tea_coffee"
-                checked={selectedTea === beverage.id}
-                onChange={() => setSelectedTea(beverage.id)}
+                name="hotBeverage"
+                checked={selectedHotBeverage === beverage.name}
+                onChange={() => setSelectedHotBeverage(beverage.name)}
                 className="w-4 h-4 text-primary"
               />
               <span className="ml-3">{beverage.name}</span>
@@ -207,26 +184,26 @@ export default function BreakfastCard({ id, name, description, price, image, typ
       </div>
 
       <div>
-        <h3 className="font-semibold text-lg mb-4">Selecciona tu Jugo:</h3>
+        <h3 className="font-semibold text-lg mb-4">Selecciona tu Jugo Natural:</h3>
         <div className="grid grid-cols-1 gap-3">
-          {juices.map(juice => (
+          {coldBeverages.map(beverage => (
             <label
-              key={juice.id}
+              key={beverage.name}
               className={`
                 flex items-center p-4 rounded-lg cursor-pointer transition border
-                ${selectedJuice === juice.id 
+                ${selectedColdBeverage === beverage.name 
                   ? 'border-primary bg-primary/5 text-primary' 
                   : 'border-gray-200 hover:border-primary/50'}
               `}
             >
               <input
                 type="radio"
-                name="juice"
-                checked={selectedJuice === juice.id}
-                onChange={() => setSelectedJuice(juice.id)}
+                name="coldBeverage"
+                checked={selectedColdBeverage === beverage.name}
+                onChange={() => setSelectedColdBeverage(beverage.name)}
                 className="w-4 h-4 text-primary"
               />
-              <span className="ml-3">{juice.name}</span>
+              <span className="ml-3">{beverage.name}</span>
             </label>
           ))}
         </div>
@@ -237,10 +214,10 @@ export default function BreakfastCard({ id, name, description, price, image, typ
         <div className="grid grid-cols-1 gap-3">
           {cakes.map(cake => (
             <label
-              key={cake.id}
+              key={cake.name}
               className={`
                 flex items-center p-4 rounded-lg cursor-pointer transition border
-                ${selectedCake === cake.id 
+                ${selectedCake === cake.name 
                   ? 'border-primary bg-primary/5 text-primary' 
                   : 'border-gray-200 hover:border-primary/50'}
               `}
@@ -248,8 +225,8 @@ export default function BreakfastCard({ id, name, description, price, image, typ
               <input
                 type="radio"
                 name="cake"
-                checked={selectedCake === cake.id}
-                onChange={() => setSelectedCake(cake.id)}
+                checked={selectedCake === cake.name}
+                onChange={() => setSelectedCake(cake.name)}
                 className="w-4 h-4 text-primary"
               />
               <span className="ml-3">{cake.name}</span>
@@ -265,44 +242,44 @@ export default function BreakfastCard({ id, name, description, price, image, typ
       <div>
         <h3 className="font-semibold text-lg mb-4">Bebidas Calientes (Elige hasta 2):</h3>
         <div className="space-y-3">
-          {teas_and_coffees.map(beverage => (
+          {hotBeverages.map(beverage => (
             <div
-              key={beverage.id}
+              key={beverage.name}
               className="flex items-center justify-between p-4 rounded-lg border border-gray-200"
             >
               <span>{beverage.name}</span>
               <SelectionButton
-                id={beverage.id}
-                counts={teaCounts}
-                setCounts={setTeaCounts}
+                name={beverage.name}
+                counts={hotBeverageCounts}
+                setCounts={setHotBeverageCounts}
               />
             </div>
           ))}
         </div>
         <p className="text-sm text-gray-500 mt-2">
-          Seleccionados: {getTotalSelections(teaCounts)}/2
+          Seleccionados: {getTotalSelections(hotBeverageCounts)}/2
         </p>
       </div>
 
       <div>
-        <h3 className="font-semibold text-lg mb-4">Jugos (Elige hasta 2):</h3>
+        <h3 className="font-semibold text-lg mb-4">Jugos Naturales (Elige hasta 2):</h3>
         <div className="space-y-3">
-          {juices.map(juice => (
+          {coldBeverages.map(beverage => (
             <div
-              key={juice.id}
+              key={beverage.name}
               className="flex items-center justify-between p-4 rounded-lg border border-gray-200"
             >
-              <span>{juice.name}</span>
+              <span>{beverage.name}</span>
               <SelectionButton
-                id={juice.id}
-                counts={juiceCounts}
-                setCounts={setJuiceCounts}
+                name={beverage.name}
+                counts={coldBeverageCounts}
+                setCounts={setColdBeverageCounts}
               />
             </div>
           ))}
         </div>
         <p className="text-sm text-gray-500 mt-2">
-          Seleccionados: {getTotalSelections(juiceCounts)}/2
+          Seleccionados: {getTotalSelections(coldBeverageCounts)}/2
         </p>
       </div>
 
@@ -311,12 +288,12 @@ export default function BreakfastCard({ id, name, description, price, image, typ
         <div className="space-y-3">
           {cakes.map(cake => (
             <div
-              key={cake.id}
+              key={cake.name}
               className="flex items-center justify-between p-4 rounded-lg border border-gray-200"
             >
               <span>{cake.name}</span>
               <SelectionButton
-                id={cake.id}
+                name={cake.name}
                 counts={cakeCounts}
                 setCounts={setCakeCounts}
               />
@@ -342,10 +319,12 @@ export default function BreakfastCard({ id, name, description, price, image, typ
 
   const isFormValid = () => {
     if (type === 'simple') {
-      return selectedTea > 0 && selectedJuice > 0 && selectedCake > 0;
+      return selectedHotBeverage !== '' && 
+             selectedColdBeverage !== '' && 
+             selectedCake !== '';
     } else if (type === 'double') {
-      return getTotalSelections(teaCounts) === 2 &&
-             getTotalSelections(juiceCounts) === 2 &&
+      return getTotalSelections(hotBeverageCounts) === 2 &&
+             getTotalSelections(coldBeverageCounts) === 2 &&
              getTotalSelections(cakeCounts) === 2;
     } else if (type === 'bowl') {
       return true;
@@ -457,7 +436,7 @@ export default function BreakfastCard({ id, name, description, price, image, typ
               {!isFormValid() && type !== 'bowl' && (
                 <p className="text-red-500 text-sm mt-2 text-center">
                   {type === 'simple' 
-                    ? 'Por favor selecciona una opción de cada categoría'
+                    ? 'Por favor selecciona una bebida caliente, una bebida fría y un pastel'
                     : 'Por favor selecciona 2 opciones de cada categoría'}
                 </p>
               )}
