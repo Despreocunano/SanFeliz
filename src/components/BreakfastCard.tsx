@@ -344,7 +344,7 @@ export default function BreakfastCard({
         </div>
         <div className="p-6">
           <h3 className="text-xl font-display font-bold text-dark">{name}</h3>
-          <p className="text-gray-600 mt-2 text-sm">{description}</p>
+          <p className="text-gray-600 mt-2 text-sm line-clamp-2">{description}</p>
           <div className="mt-4 flex justify-between items-center">
             <p className="text-primary font-bold text-xl">{formatPrice(price)}</p>
             <button className="text-white bg-primary px-4 py-2 rounded-full text-sm font-semibold hover:bg-secondary transition">
