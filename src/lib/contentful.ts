@@ -1,5 +1,5 @@
 import contentful from 'contentful';
-import type { Entry, EntryFields } from 'contentful';
+type Entry<T extends contentful.EntrySkeletonType> = contentful.Entry<T>;
 
 export const contentfulClient = contentful.createClient({
   space: import.meta.env.CONTENTFUL_SPACE_ID,
@@ -7,17 +7,28 @@ export const contentfulClient = contentful.createClient({
   environment: 'master'
 });
 
+export interface ContentfulImage {
+  fields: {
+    file: {
+      url: string;
+      details: {
+        size: number;
+        image?: {
+          width: number;
+          height: number;
+        };
+      };
+      fileName: string;
+      contentType: string;
+    };
+  };
+}
+
 export interface BlogPost {
   title: string;
   slug: string;
   content: any;
-  featuredImage: {
-    fields: {
-      file: {
-        url: string;
-      };
-    };
-  };
+  featuredImage: ContentfulImage;
   excerpt: string;
   publishDate: string;
 }
@@ -41,22 +52,16 @@ export interface FeaturedBreakfast {
   title: string;
   description: string;
   price: number;
-  image: string | {
-    fields: {
-      file: {
-        url: string;
-      };
-    };
-  };
-  features: {
+  image: ContentfulImage;
+  features: Array<{
     icon: string;
     text: string;
-  }[];
-  badges: {
+  }>;
+  badges: Array<{
     text: string;
     icon: string;
     color: string;
-  }[];
+  }>;
 }
 
 export interface Breakfast {
@@ -64,165 +69,126 @@ export interface Breakfast {
   slug: string;
   description: string;
   price: number;
-  image: string | {
-    fields: {
-      file: {
-        url: string;
-      };
-    };
-  };
+  media: ContentfulImage;
   type: 'simple' | 'double' | 'bowl';
   category: {
     fields: BreakfastCategory;
   };
-  defaultBeverages?: {
+  defaultBeverages: Array<{
     fields: Beverage;
-  }[];
-  defaultCakes?: {
+  }>;
+  defaultCakes: Array<{
     fields: Cake;
-  }[];
+  }>;
   featured: boolean;
 }
 
-type ContentfulQuery<T> = {
-  content_type: string;
-  limit?: number;
-  include?: number;
-  order?: string[];
-} & {
-  [K in `fields.${Extract<keyof T, string>}`]?: string;
-};
+function transformEntry<T>(entry: Entry<any>): T {
+  return entry.fields as T;
+}
 
 export async function getBlogPosts(): Promise<BlogPost[]> {
-  const query: ContentfulQuery<BlogPost> = {
+  const entries = await contentfulClient.getEntries<BlogPost>({
     content_type: 'blogPost',
-    order: ['-fields.publishDate']
-  };
-
-  const entries = await contentfulClient.getEntries(query);
-
-  return entries.items.map(item => {
-    const fields = item.fields as any;
-    return {
-      title: fields.title,
-      slug: fields.slug,
-      content: fields.content,
-      featuredImage: fields.featuredImage,
-      excerpt: fields.excerpt,
-      publishDate: fields.publishDate
-    };
+    order: ['-fields.publishDate'],
+    include: 10
   });
+
+  return entries.items.map(entry => transformEntry<BlogPost>(entry));
 }
 
 export async function getBlogPost(slug: string): Promise<BlogPost | null> {
-  const query: ContentfulQuery<BlogPost> = {
+  const entries = await contentfulClient.getEntries<BlogPost>({
     content_type: 'blogPost',
     'fields.slug': slug,
-    limit: 1
-  };
+    limit: 1,
+    include: 10
+  });
 
-  const entries = await contentfulClient.getEntries(query);
-
-  if (!entries.items[0]) return null;
-
-  const fields = entries.items[0].fields as any;
-  return {
-    title: fields.title,
-    slug: fields.slug,
-    content: fields.content,
-    featuredImage: fields.featuredImage,
-    excerpt: fields.excerpt,
-    publishDate: fields.publishDate
-  };
+  return entries.items[0] ? transformEntry<BlogPost>(entries.items[0]) : null;
 }
 
 export async function getBreakfasts(): Promise<Breakfast[]> {
-  const query: ContentfulQuery<Breakfast> = {
-    content_type: 'breakfast',
-    order: ['fields.name'],
-    include: 2
-  };
+  try {
+    const entries = await contentfulClient.getEntries<Breakfast>({
+      content_type: 'breakfast',
+      include: 10
+    });
 
-  const entries = await contentfulClient.getEntries(query);
-
-  return entries.items.map(item => ({
-    ...(item.fields as any),
-    id: item.sys.id
-  }));
+    return entries.items.map(entry => {
+      const breakfast = transformEntry<Breakfast>(entry);
+      console.log(`Processing breakfast "${breakfast.name}":`, {
+        mediaField: breakfast.media,
+        mediaRef: breakfast.media?.fields?.file?.url
+      });
+      return breakfast;
+    });
+  } catch (error) {
+    console.error('Error fetching breakfasts:', error);
+    throw error;
+  }
 }
 
 export async function getBreakfast(slug: string): Promise<Breakfast | null> {
-  const query: ContentfulQuery<Breakfast> = {
+  const entries = await contentfulClient.getEntries<Breakfast>({
     content_type: 'breakfast',
     'fields.slug': slug,
     limit: 1,
-    include: 2
-  };
+    include: 10
+  });
 
-  const entries = await contentfulClient.getEntries(query);
-  return entries.items[0]?.fields as any || null;
+  return entries.items[0] ? transformEntry<Breakfast>(entries.items[0]) : null;
 }
 
 export async function getFeaturedBreakfast(): Promise<FeaturedBreakfast | null> {
-  const query: ContentfulQuery<FeaturedBreakfast> = {
-    content_type: 'featuredBreakfast',
-    limit: 1,
-    include: 2
-  };
+  try {
+    const entries = await contentfulClient.getEntries<FeaturedBreakfast>({
+      content_type: 'featuredBreakfast',
+      limit: 1,
+      include: 10
+    });
 
-  const entries = await contentfulClient.getEntries(query);
+    if (!entries.items[0]) {
+      return null;
+    }
 
-  if (!entries.items[0]) return null;
+    const featuredBreakfast = transformEntry<FeaturedBreakfast>(entries.items[0]);
+    console.log('Featured breakfast:', {
+      fields: Object.keys(featuredBreakfast),
+      imageField: featuredBreakfast.image,
+      imageRef: featuredBreakfast.image?.fields?.file?.url
+    });
 
-  const fields = entries.items[0].fields as any;
-  return {
-    title: fields.title,
-    description: fields.description,
-    price: fields.price,
-    image: fields.image,
-    features: fields.features,
-    badges: fields.badges
-  };
+    return featuredBreakfast;
+  } catch (error) {
+    console.error('Error fetching featured breakfast:', error);
+    throw error;
+  }
 }
 
 export async function getBreakfastCategories(): Promise<BreakfastCategory[]> {
-  const query: ContentfulQuery<BreakfastCategory> = {
+  const entries = await contentfulClient.getEntries<BreakfastCategory>({
     content_type: 'breakfastCategory',
-    order: ['fields.name']
-  };
+    include: 10
+  });
 
-  const entries = await contentfulClient.getEntries(query);
-
-  return entries.items.map(item => ({
-    ...(item.fields as any),
-    id: item.sys.id
-  }));
+  return entries.items.map(entry => transformEntry<BreakfastCategory>(entry));
 }
 
 export async function getBeverages(): Promise<Beverage[]> {
-  const query: ContentfulQuery<Beverage> = {
+  const entries = await contentfulClient.getEntries<Beverage>({
     content_type: 'beverage',
-    order: ['fields.name']
-  };
+    include: 10
+  });
 
-  const entries = await contentfulClient.getEntries(query);
-
-  return entries.items.map(item => ({
-    ...(item.fields as any),
-    id: item.sys.id
-  }));
+  return entries.items.map(entry => transformEntry<Beverage>(entry));
 }
 
 export async function getCakes(): Promise<Cake[]> {
-  const query: ContentfulQuery<Cake> = {
+  const entries = await contentfulClient.getEntries<Cake>({
     content_type: 'cake',
-    order: ['fields.name']
-  };
+    include: 10
+  });
 
-  const entries = await contentfulClient.getEntries(query);
-
-  return entries.items.map(item => ({
-    ...(item.fields as any),
-    id: item.sys.id
-  }));
+  return entries.items.map(entry => transformEntry<Cake>(entry));
 }

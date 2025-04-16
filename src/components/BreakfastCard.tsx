@@ -151,7 +151,7 @@ export default function BreakfastCard({
     message += `\n📝 Notas adicionales: ${additionalNotes || 'Ninguna'}\n`;
     message += `\n💰 Total: ${formatPrice(getTotalPrice())}`;
 
-    const whatsappUrl = `+56967449210?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/+56967449210?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 
@@ -339,7 +339,15 @@ export default function BreakfastCard({
         onClick={() => setIsModalOpen(true)}
       >
         <div className="relative">
-          <img src={image} alt={name} className="w-full h-48 object-cover" />
+          <img 
+            src={image} 
+            alt={name} 
+            className="w-full h-48 object-cover"
+            onError={(e) => {
+              console.error('Image failed to load:', image);
+              e.currentTarget.style.display = 'none';
+            }}
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"/>
         </div>
         <div className="p-6">
@@ -374,7 +382,15 @@ export default function BreakfastCard({
             </div>
 
             <div className="mb-8">
-              <img src={image} alt={name} className="w-full h-64 object-cover rounded-lg" />
+              <img 
+                src={image} 
+                alt={name} 
+                className="w-full h-64 object-cover rounded-lg"
+                onError={(e) => {
+                  console.error('Modal image failed to load:', image);
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
             </div>
 
             <div className="space-y-6">
