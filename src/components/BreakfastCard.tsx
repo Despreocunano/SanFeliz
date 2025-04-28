@@ -113,35 +113,46 @@ export default function BreakfastCard({
   const handleWhatsAppOrder = () => {
     let message = `¡Hola! Me gustaría ordenar:\n\n🍳 ${name}\n`;
 
-    if (type === 'simple') {
-      const selectedHotBeverageName = hotBeverages.find(b => b.name === selectedHotBeverage)?.name || 'No seleccionado';
-      const selectedColdBeverageName = coldBeverages.find(b => b.name === selectedColdBeverage)?.name || 'No seleccionado';
-      const selectedCakeName = cakes.find(c => c.name === selectedCake)?.name || 'No seleccionado';
-
-      message += `☕ Bebida Caliente: ${selectedHotBeverageName}\n`;
-      message += `🥤 Bebida Fría: ${selectedColdBeverageName}\n`;
-      message += `🍰 Pastel: ${selectedCakeName}\n`;
+    if (type === 'simple' && (hotBeverages.length > 0 || coldBeverages.length > 0 || cakes.length > 0)) {
+      if (hotBeverages.length > 0) {
+        const selectedHotBeverageName = hotBeverages.find(b => b.name === selectedHotBeverage)?.name || 'No seleccionado';
+        message += `☕ Bebida Caliente: ${selectedHotBeverageName}\n`;
+      }
+      if (coldBeverages.length > 0) {
+        const selectedColdBeverageName = coldBeverages.find(b => b.name === selectedColdBeverage)?.name || 'No seleccionado';
+        message += `🥤 Bebida Fría: ${selectedColdBeverageName}\n`;
+      }
+      if (cakes.length > 0) {
+        const selectedCakeName = cakes.find(c => c.name === selectedCake)?.name || 'No seleccionado';
+        message += `🍰 Pastel: ${selectedCakeName}\n`;
+      }
     } else if (type === 'double') {
-      message += '\nBebidas Calientes:\n';
-      Object.entries(hotBeverageCounts).forEach(([name, count]) => {
-        if (count > 0) {
-          message += `☕ ${name} x${count}\n`;
-        }
-      });
+      if (hotBeverages.length > 0) {
+        message += '\nBebidas Calientes:\n';
+        Object.entries(hotBeverageCounts).forEach(([name, count]) => {
+          if (count > 0) {
+            message += `☕ ${name} x${count}\n`;
+          }
+        });
+      }
 
-      message += '\nBebidas Frías:\n';
-      Object.entries(coldBeverageCounts).forEach(([name, count]) => {
-        if (count > 0) {
-          message += `🥤 ${name} x${count}\n`;
-        }
-      });
+      if (coldBeverages.length > 0) {
+        message += '\nBebidas Frías:\n';
+        Object.entries(coldBeverageCounts).forEach(([name, count]) => {
+          if (count > 0) {
+            message += `🥤 ${name} x${count}\n`;
+          }
+        });
+      }
 
-      message += '\nPasteles:\n';
-      Object.entries(cakeCounts).forEach(([name, count]) => {
-        if (count > 0) {
-          message += `🍰 ${name} x${count}\n`;
-        }
-      });
+      if (cakes.length > 0) {
+        message += '\nPasteles:\n';
+        Object.entries(cakeCounts).forEach(([name, count]) => {
+          if (count > 0) {
+            message += `🍰 ${name} x${count}\n`;
+          }
+        });
+      }
     }
 
     if (includeCustomBowl) {
@@ -157,153 +168,165 @@ export default function BreakfastCard({
 
   const renderSimpleBreakfastOptions = () => (
     <div className="space-y-8">
-      <div>
-        <h3 className="font-semibold text-lg mb-4">Selecciona tu Té o Café:</h3>
-        <div className="grid grid-cols-1 gap-3">
-          {hotBeverages.map(beverage => (
-            <label
-              key={beverage.name}
-              className={`
-                flex items-center p-4 rounded-lg cursor-pointer transition border
-                ${selectedHotBeverage === beverage.name 
-                  ? 'border-primary bg-primary/5 text-primary' 
-                  : 'border-gray-200 hover:border-primary/50'}
-              `}
-            >
-              <input
-                type="radio"
-                name="hotBeverage"
-                checked={selectedHotBeverage === beverage.name}
-                onChange={() => setSelectedHotBeverage(beverage.name)}
-                className="w-4 h-4 text-primary"
-              />
-              <span className="ml-3">{beverage.name}</span>
-            </label>
-          ))}
+      {hotBeverages.length > 0 && (
+        <div>
+          <h3 className="font-semibold text-lg mb-4">Selecciona tu Té o Café:</h3>
+          <div className="grid grid-cols-1 gap-3">
+            {hotBeverages.map(beverage => (
+              <label
+                key={beverage.name}
+                className={`
+                  flex items-center p-4 rounded-lg cursor-pointer transition border
+                  ${selectedHotBeverage === beverage.name 
+                    ? 'border-primary bg-primary/5 text-primary' 
+                    : 'border-gray-200 hover:border-primary/50'}
+                `}
+              >
+                <input
+                  type="radio"
+                  name="hotBeverage"
+                  checked={selectedHotBeverage === beverage.name}
+                  onChange={() => setSelectedHotBeverage(beverage.name)}
+                  className="w-4 h-4 text-primary"
+                />
+                <span className="ml-3">{beverage.name}</span>
+              </label>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
-      <div>
-        <h3 className="font-semibold text-lg mb-4">Selecciona tu Jugo Natural:</h3>
-        <div className="grid grid-cols-1 gap-3">
-          {coldBeverages.map(beverage => (
-            <label
-              key={beverage.name}
-              className={`
-                flex items-center p-4 rounded-lg cursor-pointer transition border
-                ${selectedColdBeverage === beverage.name 
-                  ? 'border-primary bg-primary/5 text-primary' 
-                  : 'border-gray-200 hover:border-primary/50'}
-              `}
-            >
-              <input
-                type="radio"
-                name="coldBeverage"
-                checked={selectedColdBeverage === beverage.name}
-                onChange={() => setSelectedColdBeverage(beverage.name)}
-                className="w-4 h-4 text-primary"
-              />
-              <span className="ml-3">{beverage.name}</span>
-            </label>
-          ))}
+      {coldBeverages.length > 0 && (
+        <div>
+          <h3 className="font-semibold text-lg mb-4">Selecciona tu Jugo Natural:</h3>
+          <div className="grid grid-cols-1 gap-3">
+            {coldBeverages.map(beverage => (
+              <label
+                key={beverage.name}
+                className={`
+                  flex items-center p-4 rounded-lg cursor-pointer transition border
+                  ${selectedColdBeverage === beverage.name 
+                    ? 'border-primary bg-primary/5 text-primary' 
+                    : 'border-gray-200 hover:border-primary/50'}
+                `}
+              >
+                <input
+                  type="radio"
+                  name="coldBeverage"
+                  checked={selectedColdBeverage === beverage.name}
+                  onChange={() => setSelectedColdBeverage(beverage.name)}
+                  className="w-4 h-4 text-primary"
+                />
+                <span className="ml-3">{beverage.name}</span>
+              </label>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
-      <div>
-        <h3 className="font-semibold text-lg mb-4">Selecciona tu Pastel:</h3>
-        <div className="grid grid-cols-1 gap-3">
-          {cakes.map(cake => (
-            <label
-              key={cake.name}
-              className={`
-                flex items-center p-4 rounded-lg cursor-pointer transition border
-                ${selectedCake === cake.name 
-                  ? 'border-primary bg-primary/5 text-primary' 
-                  : 'border-gray-200 hover:border-primary/50'}
-              `}
-            >
-              <input
-                type="radio"
-                name="cake"
-                checked={selectedCake === cake.name}
-                onChange={() => setSelectedCake(cake.name)}
-                className="w-4 h-4 text-primary"
-              />
-              <span className="ml-3">{cake.name}</span>
-            </label>
-          ))}
+      {cakes.length > 0 && (
+        <div>
+          <h3 className="font-semibold text-lg mb-4">Selecciona tu Pastel:</h3>
+          <div className="grid grid-cols-1 gap-3">
+            {cakes.map(cake => (
+              <label
+                key={cake.name}
+                className={`
+                  flex items-center p-4 rounded-lg cursor-pointer transition border
+                  ${selectedCake === cake.name 
+                    ? 'border-primary bg-primary/5 text-primary' 
+                    : 'border-gray-200 hover:border-primary/50'}
+                `}
+              >
+                <input
+                  type="radio"
+                  name="cake"
+                  checked={selectedCake === cake.name}
+                  onChange={() => setSelectedCake(cake.name)}
+                  className="w-4 h-4 text-primary"
+                />
+                <span className="ml-3">{cake.name}</span>
+              </label>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 
   const renderDoubleBreakfastOptions = () => (
     <div className="space-y-8">
-      <div>
-        <h3 className="font-semibold text-lg mb-4">Bebidas Calientes (Elige hasta 2):</h3>
-        <div className="space-y-3">
-          {hotBeverages.map(beverage => (
-            <div
-              key={beverage.name}
-              className="flex items-center justify-between p-4 rounded-lg border border-gray-200"
-            >
-              <span>{beverage.name}</span>
-              <SelectionButton
-                name={beverage.name}
-                counts={hotBeverageCounts}
-                setCounts={setHotBeverageCounts}
-              />
-            </div>
-          ))}
+      {hotBeverages.length > 0 && (
+        <div>
+          <h3 className="font-semibold text-lg mb-4">Bebidas Calientes (Elige hasta 2):</h3>
+          <div className="space-y-3">
+            {hotBeverages.map(beverage => (
+              <div
+                key={beverage.name}
+                className="flex items-center justify-between p-4 rounded-lg border border-gray-200"
+              >
+                <span>{beverage.name}</span>
+                <SelectionButton
+                  name={beverage.name}
+                  counts={hotBeverageCounts}
+                  setCounts={setHotBeverageCounts}
+                />
+              </div>
+            ))}
+          </div>
+          <p className="text-sm text-gray-500 mt-2">
+            Seleccionados: {getTotalSelections(hotBeverageCounts)}/2
+          </p>
         </div>
-        <p className="text-sm text-gray-500 mt-2">
-          Seleccionados: {getTotalSelections(hotBeverageCounts)}/2
-        </p>
-      </div>
+      )}
 
-      <div>
-        <h3 className="font-semibold text-lg mb-4">Jugos Naturales (Elige hasta 2):</h3>
-        <div className="space-y-3">
-          {coldBeverages.map(beverage => (
-            <div
-              key={beverage.name}
-              className="flex items-center justify-between p-4 rounded-lg border border-gray-200"
-            >
-              <span>{beverage.name}</span>
-              <SelectionButton
-                name={beverage.name}
-                counts={coldBeverageCounts}
-                setCounts={setColdBeverageCounts}
-              />
-            </div>
-          ))}
+      {coldBeverages.length > 0 && (
+        <div>
+          <h3 className="font-semibold text-lg mb-4">Jugos Naturales (Elige hasta 2):</h3>
+          <div className="space-y-3">
+            {coldBeverages.map(beverage => (
+              <div
+                key={beverage.name}
+                className="flex items-center justify-between p-4 rounded-lg border border-gray-200"
+              >
+                <span>{beverage.name}</span>
+                <SelectionButton
+                  name={beverage.name}
+                  counts={coldBeverageCounts}
+                  setCounts={setColdBeverageCounts}
+                />
+              </div>
+            ))}
+          </div>
+          <p className="text-sm text-gray-500 mt-2">
+            Seleccionados: {getTotalSelections(coldBeverageCounts)}/2
+          </p>
         </div>
-        <p className="text-sm text-gray-500 mt-2">
-          Seleccionados: {getTotalSelections(coldBeverageCounts)}/2
-        </p>
-      </div>
+      )}
 
-      <div>
-        <h3 className="font-semibold text-lg mb-4">Pasteles (Elige hasta 2):</h3>
-        <div className="space-y-3">
-          {cakes.map(cake => (
-            <div
-              key={cake.name}
-              className="flex items-center justify-between p-4 rounded-lg border border-gray-200"
-            >
-              <span>{cake.name}</span>
-              <SelectionButton
-                name={cake.name}
-                counts={cakeCounts}
-                setCounts={setCakeCounts}
-              />
-            </div>
-          ))}
+      {cakes.length > 0 && (
+        <div>
+          <h3 className="font-semibold text-lg mb-4">Pasteles (Elige hasta 2):</h3>
+          <div className="space-y-3">
+            {cakes.map(cake => (
+              <div
+                key={cake.name}
+                className="flex items-center justify-between p-4 rounded-lg border border-gray-200"
+              >
+                <span>{cake.name}</span>
+                <SelectionButton
+                  name={cake.name}
+                  counts={cakeCounts}
+                  setCounts={setCakeCounts}
+                />
+              </div>
+            ))}
+          </div>
+          <p className="text-sm text-gray-500 mt-2">
+            Seleccionados: {getTotalSelections(cakeCounts)}/2
+          </p>
         </div>
-        <p className="text-sm text-gray-500 mt-2">
-          Seleccionados: {getTotalSelections(cakeCounts)}/2
-        </p>
-      </div>
+      )}
     </div>
   );
 
@@ -319,13 +342,19 @@ export default function BreakfastCard({
 
   const isFormValid = () => {
     if (type === 'simple') {
-      return selectedHotBeverage !== '' && 
-             selectedColdBeverage !== '' && 
-             selectedCake !== '';
+      const needsHotBeverage = hotBeverages.length > 0;
+      const needsColdBeverage = coldBeverages.length > 0;
+      const needsCake = cakes.length > 0;
+
+      return (!needsHotBeverage || selectedHotBeverage !== '') && 
+             (!needsColdBeverage || selectedColdBeverage !== '') && 
+             (!needsCake || selectedCake !== '');
     } else if (type === 'double') {
-      return getTotalSelections(hotBeverageCounts) === 2 &&
-             getTotalSelections(coldBeverageCounts) === 2 &&
-             getTotalSelections(cakeCounts) === 2;
+      const hotBeveragesValid = hotBeverages.length === 0 || getTotalSelections(hotBeverageCounts) === 2;
+      const coldBeveragesValid = coldBeverages.length === 0 || getTotalSelections(coldBeverageCounts) === 2;
+      const cakesValid = cakes.length === 0 || getTotalSelections(cakeCounts) === 2;
+
+      return hotBeveragesValid && coldBeveragesValid && cakesValid;
     } else if (type === 'bowl') {
       return true;
     }
@@ -452,8 +481,8 @@ export default function BreakfastCard({
               {!isFormValid() && type !== 'bowl' && (
                 <p className="text-red-500 text-sm mt-2 text-center">
                   {type === 'simple' 
-                    ? 'Por favor selecciona una bebida caliente, una bebida fría y un pastel'
-                    : 'Por favor selecciona 2 opciones de cada categoría'}
+                    ? 'Por favor selecciona todas las opciones disponibles'
+                    : 'Por favor selecciona 2 opciones de cada categoría disponible'}
                 </p>
               )}
             </div>
