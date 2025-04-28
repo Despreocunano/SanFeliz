@@ -335,15 +335,9 @@ export default function BreakfastCard({
   );
 
   const renderBowlOnlyOptions = () => (
-    <div className="space-y-6">
-      <div className="prose max-w-none">
-        <p className="text-lg text-gray-700 leading-relaxed">
-          {description}
-        </p>
-      </div>
-      
+    <div className="space-y-6">      
       {/* Features Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {features?.map((feature: string) => (
           <div key={feature} className="flex items-start space-x-2">
             <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
