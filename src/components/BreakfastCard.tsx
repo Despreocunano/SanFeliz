@@ -11,6 +11,7 @@ interface Props {
   cakes: Cake[];
   featured?: boolean;
   'client:load'?: boolean;
+  features?: string[];
 }
 
 interface SelectionCounts {
@@ -33,7 +34,8 @@ export default function BreakfastCard({
   type = 'simple',
   beverages,
   cakes,
-  featured = false
+  featured = false,
+  features = []
 }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedHotBeverage, setSelectedHotBeverage] = useState<string>('');
@@ -338,6 +340,20 @@ export default function BreakfastCard({
         <p className="text-lg text-gray-700 leading-relaxed">
           {description}
         </p>
+      </div>
+      
+      {/* Features Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+        {features?.map((feature: string) => (
+          <div key={feature} className="flex items-start space-x-2">
+            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <span className="text-gray-700">{feature}</span>
+          </div>
+        ))}
       </div>
     </div>
   );

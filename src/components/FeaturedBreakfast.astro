@@ -10,26 +10,30 @@ const {
   price,
   image,
   features,
-  badges
+  badges,
+  defaultBeverages = [],
+  defaultCakes = []
 } = Astro.props;
 
 const imageUrl = `https:${image.fields.file.url}`;
 
-// Mock data for BreakfastCard compatibility
+// Prepare data for BreakfastCard
 const mockBreakfast = {
   name: title,
   description,
   price,
   image: imageUrl,
-  type: 'simple',
-  beverages: [],
-  cakes: [],
-  featured: true // Add featured flag
+  type: 'bowl' as const,
+  beverages: defaultBeverages.map(b => b.fields),
+  cakes: defaultCakes.map(c => c.fields),
+  featured: true,
+  features: features.map(f => f.text)
 };
 ---
 
 <section class="relative py-16 bg-gradient-to-b from-white to-gray-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    {/* Desktop version */}
     <div class="hidden lg:block relative overflow-hidden bg-white rounded-3xl shadow-2xl">
       <div class="absolute top-0 right-0 -mt-4 -mr-4 w-40 h-40 bg-primary/10 rounded-full filter blur-3xl"></div>
       <div class="absolute bottom-0 left-0 -mb-4 -ml-4 w-40 h-40 bg-secondary/10 rounded-full filter blur-3xl"></div>
@@ -46,9 +50,6 @@ const mockBreakfast = {
           <div class="absolute top-4 left-4 flex flex-wrap gap-2">
             {badges.map(badge => (
               <span class={`inline-flex items-center px-4 py-2 rounded-full bg-${badge.color} text-white font-semibold text-sm shadow-lg backdrop-blur-sm bg-opacity-90`}>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d={badge.icon} clip-rule="evenodd" />
-                </svg>
                 {badge.text}
               </span>
             ))}
@@ -70,7 +71,7 @@ const mockBreakfast = {
                 <div class="flex items-start space-x-2">
                   <div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={feature.icon} />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
                   <span class="text-gray-700">{feature.text}</span>
@@ -82,7 +83,9 @@ const mockBreakfast = {
               <div class="flex justify-between items-center">
                 <span class="text-lg font-semibold text-gray-700">Total:</span>
                 <div class="text-right">
-                  <span class="text-3xl font-bold text-primary">{new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(price)}</span>
+                  <span class="text-3xl font-bold text-primary">
+                    {new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(price)}
+                  </span>
                 </div>
               </div>
               <p class="text-sm text-gray-600 flex items-center">
