@@ -1,5 +1,6 @@
 ---
 import type { FeaturedBreakfast } from '../lib/contentful';
+import BreakfastCard from './BreakfastCard';
 
 interface Props extends FeaturedBreakfast {}
 
@@ -12,20 +13,24 @@ const {
   badges
 } = Astro.props;
 
-const formatPrice = (price: number) => {
-  return new Intl.NumberFormat('es-CL', {
-    style: 'currency',
-    currency: 'CLP',
-    maximumFractionDigits: 0
-  }).format(price);
-};
-
 const imageUrl = `https:${image.fields.file.url}`;
+
+// Mock data for BreakfastCard compatibility
+const mockBreakfast = {
+  name: title,
+  description,
+  price,
+  image: imageUrl,
+  type: 'simple',
+  beverages: [],
+  cakes: [],
+  featured: true // Add featured flag
+};
 ---
 
 <section class="relative py-16 bg-gradient-to-b from-white to-gray-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="relative overflow-hidden bg-white rounded-3xl shadow-2xl">
+    <div class="hidden lg:block relative overflow-hidden bg-white rounded-3xl shadow-2xl">
       <div class="absolute top-0 right-0 -mt-4 -mr-4 w-40 h-40 bg-primary/10 rounded-full filter blur-3xl"></div>
       <div class="absolute bottom-0 left-0 -mb-4 -ml-4 w-40 h-40 bg-secondary/10 rounded-full filter blur-3xl"></div>
 
@@ -77,7 +82,7 @@ const imageUrl = `https:${image.fields.file.url}`;
               <div class="flex justify-between items-center">
                 <span class="text-lg font-semibold text-gray-700">Total:</span>
                 <div class="text-right">
-                  <span class="text-3xl font-bold text-primary">{formatPrice(price)}</span>
+                  <span class="text-3xl font-bold text-primary">{new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(price)}</span>
                 </div>
               </div>
               <p class="text-sm text-gray-600 flex items-center">
@@ -110,6 +115,14 @@ const imageUrl = `https:${image.fields.file.url}`;
           </div>
         </div>
       </div>
+    </div>
+
+    {/* Mobile version using BreakfastCard */}
+    <div class="lg:hidden">
+      <BreakfastCard 
+        {...mockBreakfast}
+        client:load
+      />
     </div>
   </div>
 </section>

@@ -9,6 +9,7 @@ interface Props {
   type?: 'simple' | 'double' | 'bowl';
   beverages: Beverage[];
   cakes: Cake[];
+  featured?: boolean;
   'client:load'?: boolean;
 }
 
@@ -31,7 +32,8 @@ export default function BreakfastCard({
   image, 
   type = 'simple',
   beverages,
-  cakes
+  cakes,
+  featured = false
 }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedHotBeverage, setSelectedHotBeverage] = useState<string>('');
@@ -100,7 +102,7 @@ export default function BreakfastCard({
   );
 
   const getTotalPrice = () => {
-    const bowlPrice = includeCustomBowl ? customBowl.price : 0;
+    const bowlPrice = !featured && includeCustomBowl ? customBowl.price : 0;
     return price + bowlPrice;
   };
 
@@ -427,24 +429,26 @@ export default function BreakfastCard({
               {type === 'double' && renderDoubleBreakfastOptions()}
               {type === 'bowl' && renderBowlOnlyOptions()}
 
-              {/* Tazón Personalizado */}
-              <div>
-                <label className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-primary/50 transition cursor-pointer">
-                  <div>
-                    <span className="font-semibold">{customBowl.name}</span>
-                    <p className="text-sm text-gray-600">Añade un toque personal</p>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <span className="text-gray-600">+{formatPrice(customBowl.price)}</span>
-                    <input
-                      type="checkbox"
-                      checked={includeCustomBowl}
-                      onChange={(e) => setIncludeCustomBowl(e.target.checked)}
-                      className="w-5 h-5 text-primary rounded border-gray-300 focus:ring-primary"
-                    />
-                  </div>
-                </label>
-              </div>
+              {/* Tazón Personalizado - Only show if not featured */}
+              {!featured && (
+                <div>
+                  <label className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-primary/50 transition cursor-pointer">
+                    <div>
+                      <span className="font-semibold">{customBowl.name}</span>
+                      <p className="text-sm text-gray-600">Añade un toque personal</p>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <span className="text-gray-600">+{formatPrice(customBowl.price)}</span>
+                      <input
+                        type="checkbox"
+                        checked={includeCustomBowl}
+                        onChange={(e) => setIncludeCustomBowl(e.target.checked)}
+                        className="w-5 h-5 text-primary rounded border-gray-300 focus:ring-primary"
+                      />
+                    </div>
+                  </label>
+                </div>
+              )}
 
               {/* Notas Adicionales */}
               <div>

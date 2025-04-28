@@ -66,13 +66,17 @@ export interface FeaturedBreakfast {
   price: number;
   image: ContentfulImage;
   features: Array<{
-    icon: string;
     text: string;
   }>;
   badges: Array<{
     text: string;
-    icon: string;
-    color: string;
+    color: 'primary' | 'secondary';
+  }>;
+  defaultBeverages?: Array<{
+    fields: Beverage;
+  }>;
+  defaultCakes?: Array<{
+    fields: Cake;
   }>;
 }
 

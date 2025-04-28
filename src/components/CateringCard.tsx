@@ -25,6 +25,7 @@ export default function CateringCard({ name, description, image, options }: Prop
   };
 
   const selectedOptionData = options.find(opt => opt.name === selectedOption);
+  const basePrice = options[0].price; // Lowest price option
 
   const handleWhatsAppOrder = () => {
     if (!selectedOptionData) return;
@@ -55,9 +56,10 @@ export default function CateringCard({ name, description, image, options }: Prop
           <h3 className="text-xl font-display font-bold text-dark">{name}</h3>
           <p className="text-gray-600 mt-2 text-sm line-clamp-2">{description}</p>
           <div className="mt-4 flex justify-between items-center">
-            <p className="text-primary font-bold text-xl">
-              {formatPrice(options[0].price)}
-            </p>
+            <div className="text-primary font-bold">
+              <span className="text-sm">Desde</span>
+              <p className="text-xl">{formatPrice(basePrice)}</p>
+            </div>
             <button className="text-white bg-primary px-4 py-2 rounded-full text-sm font-semibold hover:bg-secondary transition">
               Ver Opciones
             </button>
