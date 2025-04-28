@@ -5,13 +5,22 @@ import Hero from '../components/Hero.astro';
 import FeaturedBreakfast from '../components/FeaturedBreakfast.astro';
 import SeoText from '../components/SeoText.astro';
 import BreakfastMenu from '../components/BreakfastMenu';
-import { getBreakfasts, getBreakfastCategories, getBeverages, getCakes, getFeaturedBreakfast } from '../lib/contentful';
+import CateringSection from '../components/CateringSection';
+import { 
+  getBreakfasts, 
+  getBreakfastCategories, 
+  getBeverages, 
+  getCakes, 
+  getFeaturedBreakfast,
+  getCateringItems 
+} from '../lib/contentful';
 
 const breakfasts = await getBreakfasts();
 const categories = await getBreakfastCategories();
 const beverages = await getBeverages();
 const cakes = await getCakes();
 const featuredBreakfast = await getFeaturedBreakfast();
+const cateringItems = await getCateringItems();
 
 if (!featuredBreakfast) {
   console.error('Featured breakfast not found');
@@ -41,6 +50,8 @@ if (!featuredBreakfast) {
       />
     </div>
   </main>
+
+  <CateringSection items={cateringItems} client:load />
 
   <SeoText />
 </Layout>

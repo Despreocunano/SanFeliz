@@ -24,6 +24,18 @@ export interface ContentfulImage {
   };
 }
 
+export interface CateringItem {
+  name: string;
+  description: string;
+  image: ContentfulImage;
+  options: {
+    name: string;
+    price: number;
+    quantity: number;
+  }[];
+  type: 'dulce' | 'salado';
+}
+
 export interface BlogPost {
   title: string;
   slug: string;
@@ -118,8 +130,8 @@ export async function getBreakfasts(): Promise<Breakfast[]> {
     return entries.items.map(entry => {
       const breakfast = transformEntry<Breakfast>(entry);
       console.log(`Processing breakfast "${breakfast.name}":`, {
-        mediaField: breakfast.media,
-        mediaRef: breakfast.media?.fields?.file?.url
+        defaultBeverages: breakfast.defaultBeverages,
+        defaultCakes: breakfast.defaultCakes
       });
       return breakfast;
     });
@@ -191,4 +203,18 @@ export async function getCakes(): Promise<Cake[]> {
   });
 
   return entries.items.map(entry => transformEntry<Cake>(entry));
+}
+
+export async function getCateringItems(): Promise<CateringItem[]> {
+  try {
+    const entries = await contentfulClient.getEntries<CateringItem>({
+      content_type: 'cateringItem',
+      include: 10
+    });
+
+    return entries.items.map(entry => transformEntry<CateringItem>(entry));
+  } catch (error) {
+    console.error('Error fetching catering items:', error);
+    throw error;
+  }
 }
