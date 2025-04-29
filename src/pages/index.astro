@@ -12,15 +12,27 @@ import {
   getBeverages, 
   getCakes, 
   getFeaturedBreakfast,
-  getCateringItems 
+  getCateringItems,
+  getSiteConfig
 } from '../lib/contentful';
 
-const breakfasts = await getBreakfasts();
-const categories = await getBreakfastCategories();
-const beverages = await getBeverages();
-const cakes = await getCakes();
-const featuredBreakfast = await getFeaturedBreakfast();
-const cateringItems = await getCateringItems();
+const [
+  breakfasts,
+  categories,
+  beverages,
+  cakes,
+  featuredBreakfast,
+  cateringItems,
+  siteConfig
+] = await Promise.all([
+  getBreakfasts(),
+  getBreakfastCategories(),
+  getBeverages(),
+  getCakes(),
+  getFeaturedBreakfast(),
+  getCateringItems(),
+  getSiteConfig()
+]);
 
 if (!featuredBreakfast) {
   console.error('Featured breakfast not found');
@@ -32,26 +44,28 @@ if (!featuredBreakfast) {
   <Hero />
   {featuredBreakfast && <FeaturedBreakfast {...featuredBreakfast} />}
 
-  <main class="bg-white py-16" id="menu">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="text-3xl font-display font-bold text-center text-dark mb-4">
-        Nuestros Desayunos
-      </h2>
-      <p class="text-gray-600 text-center max-w-2xl mx-auto mb-12">
-        Cada desayuno está preparado con ingredientes frescos y puede personalizarse según tus preferencias.
-      </p>
+  {!siteConfig.showOnlyFeatured && (
+    <main class="bg-white py-16" id="menu">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-display font-bold text-center text-dark mb-4">
+          Nuestros Desayunos
+        </h2>
+        <p class="text-gray-600 text-center max-w-2xl mx-auto mb-12">
+          Cada desayuno está preparado con ingredientes frescos y puede personalizarse según tus preferencias.
+        </p>
 
-      <BreakfastMenu 
-        breakfasts={breakfasts} 
-        categories={categories}
-        beverages={beverages}
-        cakes={cakes}
-        client:load 
-      />
-    </div>
-  </main>
+        <BreakfastMenu 
+          breakfasts={breakfasts} 
+          categories={categories}
+          beverages={beverages}
+          cakes={cakes}
+          client:load 
+        />
+      </div>
+    </main>
+  )}
 
-  <CateringSection items={cateringItems} client:load />
+  {siteConfig.showCatering && <CateringSection items={cateringItems} client:load />}
 
   <SeoText />
 </Layout>

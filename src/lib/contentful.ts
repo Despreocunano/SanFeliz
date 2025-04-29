@@ -24,6 +24,11 @@ export interface ContentfulImage {
   };
 }
 
+export interface SiteConfig {
+  showOnlyFeatured: boolean;
+  showCatering: boolean;
+}
+
 export interface CateringItem {
   name: string;
   description: string;
@@ -101,6 +106,18 @@ export interface Breakfast {
 
 function transformEntry<T>(entry: Entry<any>): T {
   return entry.fields as T;
+}
+
+export async function getSiteConfig(): Promise<SiteConfig> {
+  const entries = await contentfulClient.getEntries<SiteConfig>({
+    content_type: 'siteConfig',
+    limit: 1
+  });
+
+  return entries.items[0] ? transformEntry<SiteConfig>(entries.items[0]) : {
+    showOnlyFeatured: false,
+    showCatering: true
+  };
 }
 
 export async function getBlogPosts(): Promise<BlogPost[]> {
