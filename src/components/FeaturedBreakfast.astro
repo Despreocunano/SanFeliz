@@ -81,7 +81,7 @@ const mockBreakfast = {
 
             <div class="space-y-4">
               <a 
-                href={`https://wa.me/+56967449210?text=¡Hola! Me interesa el ${title}`}
+                href={`https://wa.me/+56967449210?text=¡Hola! Me interesa el ${title}. ¿Podrías darme más información?`}
                 target="_blank"
                 rel="noopener noreferrer"
                 class="flex w-full py-4 bg-green-500 hover:bg-green-600 text-white text-center font-semibold rounded-full transition-all duration-200 shadow-lg shadow-green-500/25 hover:shadow-xl hover:shadow-green-500/30 items-center justify-center"
@@ -89,10 +89,10 @@ const mockBreakfast = {
                   const fbq = window.fbq;
                   if (typeof fbq === 'function') {
                     fbq('track', 'Purchase', {
-                      content_name: title,
+                      content_name: document.querySelector('h2')?.textContent,
                       content_type: 'product',
-                      content_ids: [title],
-                      value: price,
+                      content_ids: [document.querySelector('h2')?.textContent],
+                      value: parseFloat(document.querySelector('.text-3xl')?.textContent?.replace(/[^0-9]/g, '') || '0'),
                       currency: 'CLP'
                     });
                   }
