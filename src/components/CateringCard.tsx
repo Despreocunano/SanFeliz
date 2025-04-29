@@ -24,17 +24,32 @@ export default function CateringCard({ name, description, image, options }: Prop
     }
   };
 
+  const handleModalOpen = () => {
+    const fbq = window.fbq;
+    if (typeof fbq === 'function') {
+      fbq('track', 'ViewContent', {
+        content_name: name,
+        content_type: 'catering',
+        content_ids: [name],
+        value: options[0].price,
+        currency: 'CLP'
+      });
+    }
+    setIsModalOpen(true);
+  };
+
   const selectedOptionData = options.find(opt => opt.name === selectedOption);
   const basePrice = options[0].price; // Lowest price option
 
   const handleWhatsAppOrder = () => {
     if (!selectedOptionData) return;
 
-    // Track the conversion event
-    if (window.fbq) {
-      fbq('track', 'InitiateCheckout', {
+    const fbq = window.fbq;
+    if (typeof fbq === 'function') {
+      fbq('track', 'Purchase', {
         content_name: name,
         content_type: 'catering',
+        content_ids: [name],
         value: selectedOptionData.price,
         currency: 'CLP'
       });
@@ -52,7 +67,7 @@ export default function CateringCard({ name, description, image, options }: Prop
     <>
       <div 
         className="bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-xl"
-        onClick={() => setIsModalOpen(true)}
+        onClick={handleModalOpen}
       >
         <div className="relative">
           <img 

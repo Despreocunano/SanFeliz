@@ -114,14 +114,29 @@ export default function BreakfastCard({
     }
   };
 
+  const handleModalOpen = () => {
+    const fbq = window.fbq;
+    if (typeof fbq === 'function') {
+      fbq('track', 'ViewContent', {
+        content_name: name,
+        content_type: 'product',
+        content_ids: [name],
+        value: price,
+        currency: 'CLP'
+      });
+    }
+    setIsModalOpen(true);
+  };
+
   const handleWhatsAppOrder = () => {
     if (!isFormValid()) return;
 
-    // Track the conversion event
-    if (window.fbq) {
-      fbq('track', 'InitiateCheckout', {
+    const fbq = window.fbq;
+    if (typeof fbq === 'function') {
+      fbq('track', 'Purchase', {
         content_name: name,
         content_type: 'product',
+        content_ids: [name],
         value: getTotalPrice(),
         currency: 'CLP'
       });
@@ -389,7 +404,7 @@ export default function BreakfastCard({
     <>
       <div 
         className="bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-xl"
-        onClick={() => setIsModalOpen(true)}
+        onClick={handleModalOpen}
       >
         <div className="relative">
           <img 

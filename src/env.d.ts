@@ -16,5 +16,5 @@ interface ImportMeta {
 
 interface Window {
   MercadoPago: any;
-  fbq: (event: string, name: string, params?: any) => void;
+  fbq?: (event: string, name: string, params?: any) => void;
 }
