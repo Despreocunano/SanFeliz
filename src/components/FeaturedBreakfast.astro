@@ -38,26 +38,9 @@ const mockBreakfast = {
       <div class="absolute top-0 right-0 -mt-4 -mr-4 w-40 h-40 bg-primary/10 rounded-full filter blur-3xl"></div>
       <div class="absolute bottom-0 left-0 -mb-4 -ml-4 w-40 h-40 bg-secondary/10 rounded-full filter blur-3xl"></div>
 
-      <div class="grid lg:grid-cols-2 gap-8 p-8">
-        {/* Image Section */}
-        <div class="relative order-2 lg:order-1">
-          <div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl"></div>
-          <img 
-            src={imageUrl}
-            alt={title}
-            class="w-full h-[300px] md:h-[400px] object-cover rounded-2xl"
-          />
-          <div class="absolute top-4 left-4 flex flex-wrap gap-2">
-            {badges.map(badge => (
-              <span class={`inline-flex items-center px-4 py-2 rounded-full bg-${badge.color} text-white font-semibold text-sm shadow-lg backdrop-blur-sm bg-opacity-90`}>
-                {badge.text}
-              </span>
-            ))}
-          </div>
-        </div>
-
+      <div class="grid lg:grid-cols-5 gap-8 p-8">
         {/* Content Section */}
-        <div class="flex flex-col justify-between p-4 order-1 lg:order-2">
+        <div class="lg:col-span-3 flex flex-col justify-between p-4">
           <div class="space-y-6">
             <div>
               <h2 class="text-3xl md:text-4xl font-display font-bold text-dark">{title}</h2>
@@ -95,26 +78,43 @@ const mockBreakfast = {
                 Oferta por tiempo limitado. Incluye entrega a domicilio.
               </p>
             </div>
-          </div>
 
-          <div class="mt-8 space-y-4">
-            <a 
-              href={`https://wa.me/+56967449210?text=¡Hola! Me interesa el ${title}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="flex w-full py-4 bg-green-500 hover:bg-green-600 text-white text-center font-semibold rounded-full transition-all duration-200 shadow-lg shadow-green-500/25 hover:shadow-xl hover:shadow-green-500/30 items-center justify-center"
-            >
-              <span>Pedir por WhatsApp</span>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.04 14.69 2 12.04 2Z"/>
-              </svg>
-            </a>
-            <button 
-              onclick="document.getElementById('menu').scrollIntoView({behavior: 'smooth'})"
-              class="block w-full py-4 bg-white hover:bg-gray-50 text-primary border-2 border-primary text-center font-semibold rounded-full transition-all duration-200"
-            >
-              Ver Más Opciones
-            </button>
+            <div class="space-y-4">
+              <a 
+                href={`https://wa.me/+56967449210?text=¡Hola! Me interesa el ${title}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex w-full py-4 bg-green-500 hover:bg-green-600 text-white text-center font-semibold rounded-full transition-all duration-200 shadow-lg shadow-green-500/25 hover:shadow-xl hover:shadow-green-500/30 items-center justify-center"
+              >
+                <span>Pedir por WhatsApp</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.04 14.69 2 12.04 2Z"/>
+                </svg>
+              </a>
+              <button 
+                onclick="document.getElementById('menu').scrollIntoView({behavior: 'smooth'})"
+                class="block w-full py-4 bg-white hover:bg-gray-50 text-primary border-2 border-primary text-center font-semibold rounded-full transition-all duration-200"
+              >
+                Ver Más Opciones
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Image Section */}
+        <div class="lg:col-span-2 relative order-2">
+          <div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl"></div>
+          <img 
+            src={imageUrl}
+            alt={title}
+            class="w-full h-[600px] object-cover rounded-2xl relative z-10"
+          />
+          <div class="absolute top-4 left-4 flex flex-wrap gap-2 z-20">
+            {badges.map(badge => (
+              <span class={`inline-flex items-center px-4 py-2 rounded-full bg-${badge.color} text-white font-semibold text-sm shadow-lg backdrop-blur-sm bg-opacity-90`}>
+                {badge.text}
+              </span>
+            ))}
           </div>
         </div>
       </div>
