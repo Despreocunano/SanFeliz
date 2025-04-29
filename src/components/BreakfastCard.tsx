@@ -383,7 +383,7 @@ export default function BreakfastCard({
           <img 
             src={image} 
             alt={name} 
-            className="w-full h-48 object-cover"
+            className={`w-full ${featured ? 'h-[600px]' : 'h-48'} object-cover`}
             onError={(e) => {
               console.error('Image failed to load:', image);
               e.currentTarget.style.display = 'none';
@@ -426,7 +426,7 @@ export default function BreakfastCard({
               <img 
                 src={image} 
                 alt={name} 
-                className="w-full h-64 object-cover rounded-lg"
+                className={`w-full ${featured ? 'h-[600px]' : 'h-64'} object-cover rounded-lg`}
                 onError={(e) => {
                   console.error('Modal image failed to load:', image);
                   e.currentTarget.style.display = 'none';
