@@ -7,6 +7,7 @@ interface ImportMetaEnv {
   readonly CONTENTFUL_SPACE_ID: string;
   readonly CONTENTFUL_ACCESS_TOKEN: string;
   readonly CONTENTFUL_GRAPHQL_URL: string;
+  readonly PUBLIC_FACEBOOK_PIXEL_ID: string;
 }
 
 interface ImportMeta {
@@ -15,4 +16,5 @@ interface ImportMeta {
 
 interface Window {
   MercadoPago: any;
+  fbq: (event: string, name: string, params?: any) => void;
 }

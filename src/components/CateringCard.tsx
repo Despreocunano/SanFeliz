@@ -30,6 +30,16 @@ export default function CateringCard({ name, description, image, options }: Prop
   const handleWhatsAppOrder = () => {
     if (!selectedOptionData) return;
 
+    // Track the conversion event
+    if (window.fbq) {
+      fbq('track', 'InitiateCheckout', {
+        content_name: name,
+        content_type: 'catering',
+        value: selectedOptionData.price,
+        currency: 'CLP'
+      });
+    }
+
     const message = `¡Hola! Me gustaría ordenar:\n\n🍽️ ${name}\n📦 ${selectedOptionData.name}\n💰 ${formatPrice(selectedOptionData.price)}\n\n📝 Notas adicionales: ${additionalNotes || 'Ninguna'}`;
 
     const whatsappUrl = `https://wa.me/+56967449210?text=${encodeURIComponent(message)}`;

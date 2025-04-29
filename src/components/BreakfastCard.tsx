@@ -115,6 +115,18 @@ export default function BreakfastCard({
   };
 
   const handleWhatsAppOrder = () => {
+    if (!isFormValid()) return;
+
+    // Track the conversion event
+    if (window.fbq) {
+      fbq('track', 'InitiateCheckout', {
+        content_name: name,
+        content_type: 'product',
+        value: getTotalPrice(),
+        currency: 'CLP'
+      });
+    }
+
     let message = `¡Hola! Me gustaría ordenar:\n\n🍳 ${name}\n`;
 
     if (type === 'simple' && (hotBeverages.length > 0 || coldBeverages.length > 0 || cakes.length > 0)) {
