@@ -14,15 +14,15 @@
       <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
         <div class="relative z-10">
           {/* Badge */}
-          <div class="inline-flex items-center px-6 py-3 rounded-full bg-primary/10 mb-8">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" viewBox="0 0 20 20" fill="currentColor">
+          <div class="inline-flex items-center px-6 py-3 rounded-full bg-primary/10 mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary" viewBox="0 0 20 20" fill="currentColor">
               <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
             </svg>
-            <span class="ml-3 text-primary font-semibold text-lg">Entrega en San Felipe y Los Andes</span>
+            <span class="ml-2 text-primary font-semibold">Entrega en San Felipe y Los Andes</span>
           </div>
 
           {/* Main Heading */}
-          <h1 class="text-4xl lg:text-6xl xl:text-6xl font-display font-bold text-dark leading-tight">
+          <h1 class="text-3xl lg:text-5xl font-display font-bold text-dark leading-tight">
             Desayunos que
             <span class="relative mt-2 block">
               <span class="relative z-10 text-primary">Crean Momentos</span>
@@ -33,16 +33,43 @@
           </h1>
 
           {/* Description */}
-          <p class="mt-8 text-xl text-gray-600 leading-relaxed max-w-2xl">
+          <p class="mt-6 text-lg text-gray-600 leading-relaxed max-w-2xl">
             Sorprende a tus seres queridos con desayunos únicos y personalizados. 
             Hacemos de cada mañana una experiencia inolvidable con ingredientes frescos y presentaciones exclusivas.
           </p>
 
+          {/* Features */}
+          <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="bg-white rounded-xl p-4 shadow-lg transform hover:scale-105 transition-transform duration-300">
+              <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                  </svg>
+                </div>
+                <h3 class="text-lg font-bold text-dark">Calidad Premium</h3>
+              </div>
+              <p class="mt-2 text-sm text-gray-600">Ingredientes selectos cuidadosamente elegidos</p>
+            </div>
+
+            <div class="bg-white rounded-xl p-4 shadow-lg transform hover:scale-105 transition-transform duration-300">
+              <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                  </svg>
+                </div>
+                <h3 class="text-lg font-bold text-dark">Entrega Puntual</h3>
+              </div>
+              <p class="mt-2 text-sm text-gray-600">Garantizamos la entrega a la hora acordada</p>
+            </div>
+          </div>
+
           {/* CTA Buttons */}
-          <div class="mt-10 flex flex-wrap gap-4">
+          <div class="mt-8 flex flex-wrap gap-4">
             <button 
               onclick="document.getElementById('menu').scrollIntoView({behavior: 'smooth'})"
-              class="inline-flex items-center px-8 py-4 rounded-full bg-primary text-white font-semibold hover:bg-primary/90 transition-all duration-200 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30"
+              class="inline-flex items-center px-6 py-3 rounded-full bg-primary text-white font-semibold hover:bg-primary/90 transition-all duration-200 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30"
             >
               Ver Menú
               <svg class="ml-2 -mr-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -54,40 +81,13 @@
               href="+56967449210" 
               target="_blank" 
               rel="noopener noreferrer"
-              class="inline-flex items-center px-8 py-4 rounded-full bg-green-500 text-white font-semibold hover:bg-green-600 transition-all duration-200 shadow-lg shadow-green-500/25 hover:shadow-xl hover:shadow-green-500/30"
+              class="inline-flex items-center px-6 py-3 rounded-full bg-green-500 text-white font-semibold hover:bg-green-600 transition-all duration-200 shadow-lg shadow-green-500/25 hover:shadow-xl hover:shadow-green-500/30"
             >
               Escríbenos
               <svg class="ml-2 -mr-1 w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.04 14.69 2 12.04 2Z"/>
               </svg>
             </a>
-          </div>
-
-          {/* Features */}
-          <div class="mt-16 grid grid-cols-2 gap-8">
-            <div class="bg-white rounded-2xl p-6 shadow-xl transform hover:scale-105 transition-transform duration-300">
-              <div class="flex items-center space-x-4 mb-4">
-                <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                  </svg>
-                </div>
-                <h3 class="text-xl font-bold text-dark">Calidad Premium</h3>
-              </div>
-              <p class="text-gray-600">Ingredientes selectos cuidadosamente elegidos para crear experiencias únicas</p>
-            </div>
-
-            <div class="bg-white rounded-2xl p-6 shadow-xl transform hover:scale-105 transition-transform duration-300">
-              <div class="flex items-center space-x-4 mb-4">
-                <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
-                  </svg>
-                </div>
-                <h3 class="text-xl font-bold text-dark">Entrega Puntual</h3>
-              </div>
-              <p class="text-gray-600">Garantizamos la entrega a la hora acordada, sin excepciones</p>
-            </div>
           </div>
         </div>
 
