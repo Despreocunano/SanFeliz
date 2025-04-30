@@ -15,6 +15,15 @@ const { title = "Desayunos A Domicilio en Aconcagua" } = Astro.props;
     <title>{title}</title>
     <meta name="description" content="Desayunos especiales personalizados para toda ocasión" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet" />
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KHW11YHQC9"></script>
+<script is:inline>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KHW11YHQC9');
+</script>
     
     <!-- Meta Pixel Code -->
     <script define:vars={{ pixelId: import.meta.env.PUBLIC_FACEBOOK_PIXEL_ID }}>
