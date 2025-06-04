@@ -16,23 +16,48 @@ export default {
       typography: {
         DEFAULT: {
           css: {
+            color: '#2D3748',
             a: {
               color: '#FF6B2B',
+              textDecoration: 'none',
               '&:hover': {
                 color: '#FFA41C',
               },
             },
             h1: {
               fontFamily: 'Montserrat, system-ui, sans-serif',
+              color: '#2D3748',
             },
             h2: {
               fontFamily: 'Montserrat, system-ui, sans-serif',
+              color: '#2D3748',
             },
             h3: {
               fontFamily: 'Montserrat, system-ui, sans-serif',
+              color: '#2D3748',
             },
             h4: {
               fontFamily: 'Montserrat, system-ui, sans-serif',
+              color: '#2D3748',
+            },
+            strong: {
+              color: '#2D3748',
+            },
+            blockquote: {
+              borderLeftColor: '#FF6B2B',
+              color: '#4A5568',
+            },
+            'code::before': {
+              content: '""',
+            },
+            'code::after': {
+              content: '""',
+            },
+            code: {
+              color: '#FF6B2B',
+              backgroundColor: '#FFF5F5',
+              borderRadius: '0.25rem',
+              padding: '0.25rem',
             },
           },
         },
