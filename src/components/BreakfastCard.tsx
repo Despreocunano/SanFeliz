@@ -20,7 +20,8 @@ interface SelectionCounts {
   [key: string]: number;
 }
 
-const formatPrice = (price: number) => {
+const formatPrice = (price: number | undefined) => {
+  if (typeof price === 'undefined' || isNaN(price)) return '';
   return new Intl.NumberFormat('es-CL', {
     style: 'currency',
     currency: 'CLP',
@@ -156,12 +157,12 @@ export default function BreakfastCard({
 
     if (selectedAddition) {
       const addition = availableAdditions.find(a => a.name === selectedAddition);
-      message += `➕ Agregado: ${addition?.name}\n`;
+      message += `➕ Agregado: ${addition?.name}${addition?.price ? ` (${formatPrice(addition.price)})` : ''}\n`;
     }
 
     if (selectedBreakfastType) {
       const breakfastType = availableTypes.find(t => t.name === selectedBreakfastType);
-      message += `📦 Tipo: ${breakfastType?.name}\n`;
+      message += `📦 Tipo: ${breakfastType?.name}${breakfastType?.price ? ` (${formatPrice(breakfastType.price)})` : ''}\n`;
     }
 
     if (type === 'simple' && (hotBeverages.length > 0 || coldBeverages.length > 0 || cakes.length > 0)) {
@@ -423,9 +424,16 @@ export default function BreakfastCard({
                     onChange={() => setSelectedAddition(addition.name)}
                     className="w-4 h-4 text-primary"
                   />
-                  <span className="ml-3">{addition.name}</span>
+                  <div className="ml-3">
+                    <span>{addition.name}</span>
+                    {addition.description && (
+                      <p className="text-sm text-gray-500">{addition.description}</p>
+                    )}
+                  </div>
                 </div>
-                <span className="font-semibold">+{formatPrice(addition.price)}</span>
+                {addition.price && (
+                  <span className="font-semibold">+{formatPrice(addition.price)}</span>
+                )}
               </label>
             ))}
           </div>
@@ -454,9 +462,16 @@ export default function BreakfastCard({
                     onChange={() => setSelectedBreakfastType(breakfastType.name)}
                     className="w-4 h-4 text-primary"
                   />
-                  <span className="ml-3">{breakfastType.name}</span>
+                  <div className="ml-3">
+                    <span>{breakfastType.name}</span>
+                    {breakfastType.description && (
+                      <p className="text-sm text-gray-500">{breakfastType.description}</p>
+                    )}
+                  </div>
                 </div>
-                <span className="font-semibold">+{formatPrice(breakfastType.price)}</span>
+                {breakfastType.price && (
+                  <span className="font-semibold">+{formatPrice(breakfastType.price)}</span>
+                )}
               </label>
             ))}
           </div>
