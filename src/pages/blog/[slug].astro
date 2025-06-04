@@ -54,7 +54,7 @@ function formatDate(date: string) {
   <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
     <article class="prose prose-lg mx-auto">
       <img 
-        src={post.featuredImage.fields.file.url}
+        src={`https:${post.featuredImage.fields.file.url}`}
         alt={post.title}
         class="w-full h-[400px] object-cover rounded-2xl mb-8"
       />
@@ -74,14 +74,5 @@ function formatDate(date: string) {
   
   .prose img {
     border-radius: 1rem;
-  }
-  
-  .prose a {
-    color: var(--color-primary);
-    text-decoration: none;
-  }
-  
-  .prose a:hover {
-    text-decoration: underline;
   }
 </style>

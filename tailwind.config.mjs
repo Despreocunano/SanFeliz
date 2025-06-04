@@ -12,8 +12,34 @@ export default {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         display: ['Montserrat', 'system-ui', 'sans-serif']
-      }
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            a: {
+              color: '#FF6B2B',
+              '&:hover': {
+                color: '#FFA41C',
+              },
+            },
+            h1: {
+              fontFamily: 'Montserrat, system-ui, sans-serif',
+            },
+            h2: {
+              fontFamily: 'Montserrat, system-ui, sans-serif',
+            },
+            h3: {
+              fontFamily: 'Montserrat, system-ui, sans-serif',
+            },
+            h4: {
+              fontFamily: 'Montserrat, system-ui, sans-serif',
+            },
+          },
+        },
+      },
     }
   },
-  plugins: []
+  plugins: [
+    require('@tailwindcss/typography'),
+  ]
 };

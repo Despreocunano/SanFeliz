@@ -22,23 +22,26 @@ function formatDate(date: string) {
     
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {posts.map(post => (
-        <article class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <article class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
           <img 
-            src={post.featuredImage.fields.file.url} 
+            src={`https:${post.featuredImage.fields.file.url}`}
             alt={post.title}
             class="w-full h-48 object-cover"
           />
           <div class="p-6">
             <p class="text-sm text-gray-500 mb-2">{formatDate(post.publishDate)}</p>
-            <h2 class="text-xl font-display font-bold text-dark mb-2">
+            <h2 class="text-xl font-display font-bold text-dark mb-2 hover:text-primary transition-colors">
               {post.title}
             </h2>
-            <p class="text-gray-600 mb-4">{post.excerpt}</p>
+            <p class="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
             <a 
               href={`/blog/${post.slug}`}
-              class="text-primary font-semibold hover:text-primary/80 transition-colors"
+              class="inline-flex items-center text-primary font-semibold hover:text-primary/80 transition-colors"
             >
-              Leer más →
+              Leer más
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+              </svg>
             </a>
           </div>
         </article>
