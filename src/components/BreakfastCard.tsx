@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { Beverage, Cake } from '../lib/contentful';
+import type { Beverage, Cake, BreakfastAddition, BreakfastType } from '../lib/contentful';
 
 interface Props {
   name: string;
@@ -12,6 +12,8 @@ interface Props {
   featured?: boolean;
   'client:load'?: boolean;
   features?: string[];
+  availableAdditions?: BreakfastAddition[];
+  availableTypes?: BreakfastType[];
 }
 
 interface SelectionCounts {
@@ -35,12 +37,16 @@ export default function BreakfastCard({
   beverages,
   cakes,
   featured = false,
-  features = []
+  features = [],
+  availableAdditions = [],
+  availableTypes = []
 }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedHotBeverage, setSelectedHotBeverage] = useState<string>('');
   const [selectedColdBeverage, setSelectedColdBeverage] = useState<string>('');
   const [selectedCake, setSelectedCake] = useState<string>('');
+  const [selectedAddition, setSelectedAddition] = useState<string>('');
+  const [selectedBreakfastType, setSelectedBreakfastType] = useState<string>('');
   const [hotBeverageCounts, setHotBeverageCounts] = useState<SelectionCounts>({});
   const [coldBeverageCounts, setColdBeverageCounts] = useState<SelectionCounts>({});
   const [cakeCounts, setCakeCounts] = useState<SelectionCounts>({});
@@ -105,7 +111,11 @@ export default function BreakfastCard({
 
   const getTotalPrice = () => {
     const bowlPrice = !featured && includeCustomBowl ? customBowl.price : 0;
-    return price + bowlPrice;
+    const additionPrice = selectedAddition ? 
+      availableAdditions.find(a => a.name === selectedAddition)?.price || 0 : 0;
+    const typePrice = selectedBreakfastType ? 
+      availableTypes.find(t => t.name === selectedBreakfastType)?.price || 0 : 0;
+    return price + bowlPrice + additionPrice + typePrice;
   };
 
   const handleModalClose = (e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
@@ -143,6 +153,16 @@ export default function BreakfastCard({
     }
 
     let message = `¡Hola! Me gustaría ordenar:\n\n🍳 ${name}\n`;
+
+    if (selectedAddition) {
+      const addition = availableAdditions.find(a => a.name === selectedAddition);
+      message += `➕ Agregado: ${addition?.name}\n`;
+    }
+
+    if (selectedBreakfastType) {
+      const breakfastType = availableTypes.find(t => t.name === selectedBreakfastType);
+      message += `📦 Tipo: ${breakfastType?.name}\n`;
+    }
 
     if (type === 'simple' && (hotBeverages.length > 0 || coldBeverages.length > 0 || cakes.length > 0)) {
       if (hotBeverages.length > 0) {
@@ -379,6 +399,72 @@ export default function BreakfastCard({
     </div>
   );
 
+  const renderAdditionalOptions = () => (
+    <div className="space-y-8">
+      {availableAdditions.length > 0 && (
+        <div>
+          <h3 className="font-semibold text-lg mb-4">Agregados Especiales:</h3>
+          <div className="grid grid-cols-1 gap-3">
+            {availableAdditions.map(addition => (
+              <label
+                key={addition.name}
+                className={`
+                  flex items-center justify-between p-4 rounded-lg cursor-pointer transition border
+                  ${selectedAddition === addition.name 
+                    ? 'border-primary bg-primary/5 text-primary' 
+                    : 'border-gray-200 hover:border-primary/50'}
+                `}
+              >
+                <div className="flex items-center">
+                  <input
+                    type="radio"
+                    name="addition"
+                    checked={selectedAddition === addition.name}
+                    onChange={() => setSelectedAddition(addition.name)}
+                    className="w-4 h-4 text-primary"
+                  />
+                  <span className="ml-3">{addition.name}</span>
+                </div>
+                <span className="font-semibold">+{formatPrice(addition.price)}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {availableTypes.length > 0 && (
+        <div>
+          <h3 className="font-semibold text-lg mb-4">Tipo de Desayuno:</h3>
+          <div className="grid grid-cols-1 gap-3">
+            {availableTypes.map(breakfastType => (
+              <label
+                key={breakfastType.name}
+                className={`
+                  flex items-center justify-between p-4 rounded-lg cursor-pointer transition border
+                  ${selectedBreakfastType === breakfastType.name 
+                    ? 'border-primary bg-primary/5 text-primary' 
+                    : 'border-gray-200 hover:border-primary/50'}
+                `}
+              >
+                <div className="flex items-center">
+                  <input
+                    type="radio"
+                    name="breakfastType"
+                    checked={selectedBreakfastType === breakfastType.name}
+                    onChange={() => setSelectedBreakfastType(breakfastType.name)}
+                    className="w-4 h-4 text-primary"
+                  />
+                  <span className="ml-3">{breakfastType.name}</span>
+                </div>
+                <span className="font-semibold">+{formatPrice(breakfastType.price)}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
   const isFormValid = () => {
     if (type === 'simple') {
       const needsHotBeverage = hotBeverages.length > 0;
@@ -465,6 +551,7 @@ export default function BreakfastCard({
               {type === 'simple' && renderSimpleBreakfastOptions()}
               {type === 'double' && renderDoubleBreakfastOptions()}
               {type === 'bowl' && renderBowlOnlyOptions()}
+              {renderAdditionalOptions()}
 
               {/* Tazón Personalizado - Only show if not featured */}
               {!featured && (

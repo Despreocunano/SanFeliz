@@ -85,6 +85,18 @@ export interface FeaturedBreakfast {
   }>;
 }
 
+export interface BreakfastAddition {
+  name: string;
+  price: number;
+  description?: string;
+}
+
+export interface BreakfastType {
+  name: string;
+  price: number;
+  description?: string;
+}
+
 export interface Breakfast {
   name: string;
   slug: string;
@@ -100,6 +112,12 @@ export interface Breakfast {
   }>;
   defaultCakes: Array<{
     fields: Cake;
+  }>;
+  availableAdditions?: Array<{
+    fields: BreakfastAddition;
+  }>;
+  availableTypes?: Array<{
+    fields: BreakfastType;
   }>;
   featured: boolean;
 }

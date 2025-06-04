@@ -31,20 +31,16 @@ export default function BreakfastMenu({ breakfasts, categories, beverages, cakes
       />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredBreakfasts.map(breakfast => {
-          console.log(`Rendering breakfast "${breakfast.name}":`, {
-            defaultBeverages: breakfast.defaultBeverages,
-            defaultCakes: breakfast.defaultCakes
-          });
-
           let imageUrl = 'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=600';
           
           if (breakfast.media?.fields?.file?.url) {
             imageUrl = `https:${breakfast.media.fields.file.url}`;
           }
 
-          // Get the specific beverages and cakes for this breakfast
           const breakfastBeverages = breakfast.defaultBeverages?.map(b => b.fields) || [];
           const breakfastCakes = breakfast.defaultCakes?.map(c => c.fields) || [];
+          const breakfastAdditions = breakfast.availableAdditions?.map(a => a.fields) || [];
+          const breakfastTypes = breakfast.availableTypes?.map(t => t.fields) || [];
 
           return (
             <BreakfastCard 
@@ -56,6 +52,8 @@ export default function BreakfastMenu({ breakfasts, categories, beverages, cakes
               type={breakfast.type}
               beverages={breakfastBeverages}
               cakes={breakfastCakes}
+              availableAdditions={breakfastAdditions}
+              availableTypes={breakfastTypes}
               client:load
             />
           );
